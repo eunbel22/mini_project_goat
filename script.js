@@ -4,8 +4,8 @@
 // 서로 다른 필드를 하나의 폼에서 동적으로 렌더링한다.
 //
 // ---- Supabase 연결 정보 ----
-const SUPABASE_URL = "https://ofpqspcpumnexfqcyurs.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mcHFzcGNwdW1uZXhmcWN5dXJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwOTk1MDEsImV4cCI6MjEwMjY3NTUwMX0.Z1qVsLPiFWrP8MYXQLc-ojxCqxJLnmup5nlQUyf6lE4";
+const SUPABASE_URL = ""; 
+const SUPABASE_ANON_KEY = ""; 
 
 let supabaseClient = null;
 function initSupabase() {
