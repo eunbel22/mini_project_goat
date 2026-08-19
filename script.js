@@ -3,8 +3,9 @@
 // 자격증 3종(한식조리기능사/공인중개사/요양보호사)의
 // 서로 다른 필드를 하나의 폼에서 동적으로 렌더링한다.
 //
-// ---- 상태 ----
-let selectedCert = null;
+// Supabase 연결 설정은 common.js에 있습니다.
+// (index.html에서 common.js를 이 파일보다 먼저 불러와야 합니다)
+// ============================================
 
 // ---- 참조 데이터 (01_form_정책.md 기준) ----
 
@@ -187,57 +188,52 @@ function updateFeePreview() {
     feePreview.textContent = final.toLocaleString("ko-KR") + "원";
 }
 
+// ---- 상태 ----
+let selectedCert = null;
+
+// ---- DOM 참조 ----
+const stepSelect = document.getElementById("step-select");
+const stepForm = document.getElementById("step-form");
+const stepDone = document.getElementById("step-done");
+const certGrid = document.getElementById("certGrid");
+const selectedCertLabel = document.getElementById("selectedCertLabel");
+const certNotice = document.getElementById("certNotice");
+const applyForm = document.getElementById("applyForm");
+const submitBtn = document.getElementById("submitBtn");
+const submitStatus = document.getElementById("submitStatus");
+const doneSummary = document.getElementById("doneSummary");
+const fontToggle = document.getElementById("fontToggle");
+
+document.getElementById("discountType").addEventListener("change", updateFeePreview);
+
+// ---- 글자 크게 보기 ----
+fontToggle.addEventListener("click", () => {
+    const isLarge = document.body.classList.toggle("font-large");
+    fontToggle.setAttribute("aria-pressed", String(isLarge));
+});
+
 // ---- 1단계: 자격증 선택 ----
-document.addEventListener("DOMContentLoaded", () => {
-    const grid = document.getElementById("certGrid");
-    if (grid) {
-        grid.addEventListener("click", (e) => {
-            const card = e.target.closest(".cert-card");
-            if (!card) return;
+certGrid.addEventListener("click", (e) => {
+    const card = e.target.closest(".cert-card");
+    if (!card) return;
 
-            selectedCert = card.dataset.cert;
-            const certLabel = document.getElementById("selectedCertLabel");
-            if (certLabel) certLabel.textContent = selectedCert;
+    selectedCert = card.dataset.cert;
+    selectedCertLabel.textContent = selectedCert;
 
-            const noticeText = CERT_NOTICES[selectedCert];
-            const certNoticeEl = document.getElementById("certNotice");
-            if (certNoticeEl) {
-                certNoticeEl.textContent = noticeText || "";
-                certNoticeEl.classList.toggle("notice--show", Boolean(noticeText));
-            }
+    const noticeText = CERT_NOTICES[selectedCert];
+    certNotice.textContent = noticeText || "";
+    certNotice.classList.toggle("notice--show", Boolean(noticeText));
 
-            buildCertFields(selectedCert);
-            goToStep("form");
-        });
-    }
+    buildCertFields(selectedCert);
+    goToStep("form");
+});
 
-    const backBtn = document.getElementById("backBtn");
-    if (backBtn) {
-        backBtn.addEventListener("click", () => goToStep("select"));
-    }
+document.getElementById("backBtn").addEventListener("click", () => goToStep("select"));
 
-    const restartBtn = document.getElementById("restartBtn");
-    if (restartBtn) {
-        restartBtn.addEventListener("click", () => {
-            const applyForm = document.getElementById("applyForm");
-            if (applyForm) applyForm.reset();
-            selectedCert = null;
-            goToStep("select");
-        });
-    }
-
-    const discountTypeEl = document.getElementById("discountType");
-    if (discountTypeEl) {
-        discountTypeEl.addEventListener("change", updateFeePreview);
-    }
-
-    const fontToggleBtn = document.getElementById("fontToggle");
-    if (fontToggleBtn) {
-        fontToggleBtn.addEventListener("click", () => {
-            const isLarge = document.body.classList.toggle("font-large");
-            fontToggleBtn.setAttribute("aria-pressed", String(isLarge));
-        });
-    }
+document.getElementById("restartBtn").addEventListener("click", () => {
+    applyForm.reset();
+    selectedCert = null;
+    goToStep("select");
 });
 
 function goToStep(step) {
