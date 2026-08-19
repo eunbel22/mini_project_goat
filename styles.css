@@ -272,6 +272,126 @@ select {
     min-height: 20px;
 }
 
+/* ---------- 필드 그룹 ---------- */
+
+.field-group {
+    border: none;
+    padding: 0;
+    margin: 0 0 8px;
+}
+
+.field-group__title {
+    font-size: var(--fs-tag);
+    font-weight: 800;
+    color: var(--color-primary);
+    padding: 0 0 14px;
+    border-bottom: 3px solid var(--color-border);
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.field-group .field {
+    margin-bottom: 20px;
+}
+
+.field-group .field:last-child {
+    margin-bottom: 0;
+}
+
+.field-pair {
+    display: flex;
+    gap: 14px;
+}
+
+.field-pair .field {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ---------- 라디오 / 체크박스 ---------- */
+
+.radio-row {
+    display: flex;
+    gap: 12px;
+}
+
+.radio-pill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: var(--touch-min);
+    border: 3px solid var(--color-border);
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #fff;
+}
+
+.radio-pill:has(input:checked) {
+    border-color: var(--color-primary);
+    background: #EAF1EE;
+    color: var(--color-primary);
+}
+
+.radio-pill input {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--color-primary);
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.checkbox-row input {
+    width: 24px;
+    height: 24px;
+    accent-color: var(--color-primary);
+}
+
+/* ---------- 힌트 블록형 (자동 계산값 안내) ---------- */
+
+.field-hint--block {
+    background: #F2F0E9;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin: 0 0 4px;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+/* ---------- 수수료 박스 ---------- */
+
+.fee-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #EAF1EE;
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 4px;
+}
+
+.fee-box__label {
+    font-size: var(--fs-tag);
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.fee-box__amount {
+    font-size: var(--fs-lg);
+    font-weight: 800;
+    color: var(--color-accent-dark);
+}
+
 /* ---------- 버튼 ---------- */
 
 .submit-btn {

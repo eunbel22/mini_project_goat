@@ -28,19 +28,19 @@
             <p class="page-sub">아래에서 하나를 골라 눌러 주세요.</p>
 
             <div class="cert-grid" id="certGrid">
-                <button type="button" class="cert-card" data-cert="한식조리기능사" data-fee="14500">
+                <button type="button" class="cert-card" data-cert="한식조리기능사">
                     <span class="cert-card__icon" aria-hidden="true">🍳</span>
                     <span class="cert-card__name">한식조리기능사</span>
-                    <span class="cert-card__tag">상시 접수</span>
+                    <span class="cert-card__tag">상시 접수 · 14,500원</span>
                 </button>
 
-                <button type="button" class="cert-card" data-cert="요양보호사" data-fee="">
+                <button type="button" class="cert-card" data-cert="요양보호사">
                     <span class="cert-card__icon" aria-hidden="true">🤝</span>
                     <span class="cert-card__name">요양보호사</span>
-                    <span class="cert-card__tag">상시 접수</span>
+                    <span class="cert-card__tag">상시 접수 · 32,000원</span>
                 </button>
 
-                <button type="button" class="cert-card" data-cert="공인중개사" data-fee="">
+                <button type="button" class="cert-card" data-cert="공인중개사">
                     <span class="cert-card__icon" aria-hidden="true">🏠</span>
                     <span class="cert-card__name">공인중개사</span>
                     <span class="cert-card__tag">연 1회 접수</span>
@@ -62,27 +62,83 @@
             <div id="certNotice" class="notice" role="status"></div>
 
             <form id="applyForm" class="apply-form" novalidate>
-                <div class="field">
-                    <label for="name">이름 <span class="required">*</span></label>
-                    <input type="text" id="name" name="name" autocomplete="name" required placeholder="예) 김영자">
-                    <p class="field-error" id="nameError" role="alert"></p>
-                </div>
 
-                <div class="field">
-                    <label for="phone">연락처 <span class="required">*</span></label>
-                    <input type="tel" id="phone" name="phone" autocomplete="tel" required
-                        placeholder="예) 010-1234-5678">
-                    <p class="field-hint">숫자만 입력하셔도 됩니다.</p>
-                    <p class="field-error" id="phoneError" role="alert"></p>
-                </div>
+                <!-- 공통 필드 -->
+                <fieldset class="field-group">
+                    <legend class="field-group__title">신청자 정보</legend>
 
-                <div class="field">
-                    <label for="path">어떻게 접수하러 오셨나요?</label>
-                    <select id="path" name="path">
-                        <option value="방문">직접 방문</option>
-                        <option value="전화">전화 문의 후 대신 입력</option>
-                    </select>
-                </div>
+                    <div class="field">
+                        <label for="name">이름 <span class="required">*</span></label>
+                        <input type="text" id="name" name="name" autocomplete="name" required placeholder="예) 김영자">
+                        <p class="field-error" id="nameError" role="alert"></p>
+                    </div>
+
+                    <div class="field">
+                        <label for="birthDate">생년월일 <span class="required">*</span></label>
+                        <input type="date" id="birthDate" name="birthDate" required>
+                        <p class="field-error" id="birthDateError" role="alert"></p>
+                    </div>
+
+                    <div class="field">
+                        <label>성별 <span class="required">*</span></label>
+                        <div class="radio-row">
+                            <label class="radio-pill">
+                                <input type="radio" name="gender" value="남" required> 남
+                            </label>
+                            <label class="radio-pill">
+                                <input type="radio" name="gender" value="여" required> 여
+                            </label>
+                        </div>
+                        <p class="field-error" id="genderError" role="alert"></p>
+                    </div>
+
+                    <div class="field">
+                        <label for="phone">연락처 <span class="required">*</span></label>
+                        <input type="tel" id="phone" name="phone" autocomplete="tel" required
+                            placeholder="예) 010-1234-5678">
+                        <p class="field-hint">숫자만 입력하셔도 됩니다.</p>
+                        <p class="field-error" id="phoneError" role="alert"></p>
+                    </div>
+                </fieldset>
+
+                <!-- 자격증별 동적 필드가 여기 채워집니다 -->
+                <fieldset class="field-group">
+                    <legend class="field-group__title">시험 정보</legend>
+                    <div id="certFields"></div>
+                </fieldset>
+
+                <!-- 결제 공통 필드 -->
+                <fieldset class="field-group">
+                    <legend class="field-group__title">결제 정보</legend>
+
+                    <div class="field">
+                        <label for="discountType">감면 대상이신가요?</label>
+                        <select id="discountType" name="discountType">
+                            <option value="없음">해당 없음</option>
+                            <option value="장애인">장애인 (50% 감면)</option>
+                            <option value="기초생활수급자">기초생활수급자 (50% 감면)</option>
+                            <option value="국가유공자">국가유공자 (50% 감면)</option>
+                            <option value="차상위계층">차상위계층 (50% 감면)</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="paymentMethod">결제 수단 <span class="required">*</span></label>
+                        <select id="paymentMethod" name="paymentMethod" required>
+                            <option value="신용카드">신용카드</option>
+                            <option value="계좌이체">계좌이체</option>
+                            <option value="가상계좌">가상계좌</option>
+                        </select>
+                    </div>
+
+                    <div class="fee-box">
+                        <span class="fee-box__label">예상 결제금액</span>
+                        <span class="fee-box__amount" id="feePreview">-</span>
+                    </div>
+                    <p class="field-hint">
+                        정확한 금액은 접수 시 저희 시스템이 다시 계산해 안내드립니다.
+                    </p>
+                </fieldset>
 
                 <button type="submit" class="submit-btn" id="submitBtn">
                     신청서 제출하기
@@ -114,6 +170,8 @@
         두두자격지원센터 · 접수 문의는 챗봇 또는 센터로 연락 주세요
     </footer>
 
+    <!-- Supabase 연결 시 아래 주석을 해제하세요 -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
     <script src="script.js"></script>
 </body>
 
