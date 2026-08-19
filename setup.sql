@@ -42,9 +42,7 @@ create table if not exists applications (
 
   -- 공인중개사 전용
   exam_stage            text check (exam_stage in ('1차', '2차')),
-  is_first_pass_holder  boolean,        -- 2차 신청 시: 1차 합격자 여부
-  first_pass_year       int,            -- 2차 신청 + 1차합격자인 경우
-  first_pass_number     text,
+  exam_center            text,   -- 자유 입력 (지역별 시험장 목록 데이터가 없어 텍스트로 받음)
 
   -- 요양보호사 전용
   training_institution      text,
@@ -128,10 +126,17 @@ begin
     else null
   end;
 
-  -- 5) 응시자격유형 - 한식조리기능사는 정책상 고정값이라 자동 채움.
-  --    공인중개사는 신청자가 select로 직접 선택해서 보낸 값을 그대로 쓴다.
-  if new.qualification = '한식조리기능사' and new.eligibility_type is null then
+  -- 5) 응시자격유형: 한식조리기능사·공인중개사 둘 다 응시제한이 없다고 보고
+  --    '제한없음'을 자동으로 채운다. 요양보호사는 교육수료가 곧 응시자격이라
+  --    해당 없음(null)으로 둔다.
+  if new.qualification in ('한식조리기능사', '공인중개사') and new.eligibility_type is null then
     new.eligibility_type := '제한없음';
+  end if;
+
+  -- 6) 공인중개사 1차 시험일: 확정된 값만 자동 반영 (02_안내규정.md 기준).
+  --    2차 시험일은 확인된 자료가 없어 임의로 채우지 않고 null로 둔다.
+  if new.qualification = '공인중개사' and new.exam_stage = '1차' and new.exam_date is null then
+    new.exam_date := '2026-10-31';
   end if;
 
   return new;
@@ -157,7 +162,7 @@ alter table applications add constraint chk_hansik_fields
 alter table applications add constraint chk_gongin_fields
   check (
     qualification <> '공인중개사'
-    or (exam_stage is not null and exam_region is not null and eligibility_type is not null)
+    or (exam_stage is not null and exam_region is not null)
   );
 
 alter table applications add constraint chk_yoyang_fields
