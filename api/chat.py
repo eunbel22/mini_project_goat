@@ -21,7 +21,13 @@ import urllib.request
 from http.server import BaseHTTPRequestHandler
 from pathlib import Path
 
-FAQ_PATH = Path(__file__).with_name("faq.json")
+FAQ_PATH = Path(__file__).with_name("faq.json")  # 폴백용 백업 (Supabase 연결 실패 시에만 사용)
+
+# ---- Supabase 연결 정보 (FAQ 조회용) ----
+# 프론트엔드 common.js와 같은 값을 써도 된다. FAQ 조회는 anon(공개) 권한으로
+# 충분하고, 애초에 anon key는 공개돼도 되는 키다.
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY", "")
 
 # ---- 빈칸: Gemini API 키 ----
 # 절대 코드에 직접 쓰지 않는다. Vercel 대시보드 > Project Settings >
@@ -104,6 +110,24 @@ def substring_bonus(question_text: str, keyword_list: list) -> int:
 
 
 def load_faq():
+    """FAQ 어드민에서 고친 내용이 바로 반영되도록 Supabase에서 읽어온다.
+    Supabase 연결 정보가 없거나 호출이 실패하면(네트워크 문제 등),
+    챗봇이 완전히 멈추는 대신 배포 시점의 로컬 백업(faq.json)으로 답한다."""
+    if SUPABASE_URL and SUPABASE_ANON_KEY:
+        try:
+            url = f"{SUPABASE_URL}/rest/v1/faq_items?select=title,text,keywords"
+            req = urllib.request.Request(
+                url,
+                headers={
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
+                },
+            )
+            resp = urllib.request.urlopen(req, timeout=5)
+            return json.loads(resp.read())
+        except Exception as e:
+            print(f"[FAQ 조회 오류 - 로컬 백업으로 대체] {e}")
+
     return json.loads(FAQ_PATH.read_text(encoding="utf-8"))
 
 

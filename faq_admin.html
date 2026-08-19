@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>두두자격지원센터 - FAQ 어드민</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body class="admin-body">
+
+    <header class="top-bar">
+        <div class="top-bar__inner">
+            <span class="top-bar__logo">두두자격지원센터 · FAQ 어드민</span>
+            <nav class="top-bar__nav">
+                <a href="admin.html" class="font-toggle">접수 어드민</a>
+                <a href="chatbot.html" class="font-toggle">챗봇 미리보기</a>
+                <button type="button" id="logoutBtn" class="font-toggle admin-hidden">로그아웃</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 로그인 화면 (admin.html과 세션 공유되므로 보통은 안 뜬다) -->
+    <main id="loginView" class="admin-page admin-page--narrow">
+        <h1 class="page-title">직원 로그인</h1>
+        <p class="page-sub">Supabase에 등록된 직원 계정으로 로그인하세요.</p>
+
+        <form id="loginForm" class="apply-form">
+            <div class="field">
+                <label for="loginEmail">이메일</label>
+                <input type="email" id="loginEmail" required autocomplete="username">
+            </div>
+            <div class="field">
+                <label for="loginPassword">비밀번호</label>
+                <input type="password" id="loginPassword" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="submit-btn" id="loginBtn">로그인</button>
+            <p class="submit-status" id="loginStatus" role="alert"></p>
+        </form>
+    </main>
+
+    <!-- FAQ 관리 화면 -->
+    <main id="dashboardView" class="admin-page admin-hidden">
+
+        <div class="table-toolbar">
+            <span id="resultCount" class="table-toolbar__count"></span>
+            <button type="button" id="newFaqBtn" class="submit-btn submit-btn--sm">+ 새 FAQ 추가</button>
+            <button type="button" id="refreshBtn" class="back-btn">↻ 새로고침</button>
+        </div>
+
+        <div id="faqList" class="faq-list">
+            <p class="table-empty">불러오는 중...</p>
+        </div>
+    </main>
+
+    <!-- 추가/수정 폼 (모달처럼 오버레이) -->
+    <div id="faqFormOverlay" class="faq-form-overlay admin-hidden">
+        <div class="faq-form-box">
+            <h2 class="page-title" id="faqFormTitle" style="font-size: 22px;">FAQ 추가</h2>
+
+            <form id="faqForm" class="apply-form">
+                <input type="hidden" id="faqSlug">
+
+                <div class="field">
+                    <label for="faqTitle">제목 <span class="required">*</span></label>
+                    <input type="text" id="faqTitle" required placeholder="예) 한식조리기능사 응시료">
+                </div>
+
+                <div class="field">
+                    <label for="faqText">답변 내용 <span class="required">*</span></label>
+                    <textarea id="faqText" rows="4" required placeholder="챗봇이 그대로 답할 내용을 입력하세요"></textarea>
+                </div>
+
+                <div class="field">
+                    <label for="faqKeywords">검색 키워드 (쉼표로 구분)</label>
+                    <input type="text" id="faqKeywords" placeholder="예) 응시료, 필기 응시료">
+                    <p class="field-hint">질문에 이 단어들이 들어있으면 이 FAQ가 우선적으로 매칭돼요.</p>
+                </div>
+
+                <div class="faq-form-actions">
+                    <button type="button" id="faqCancelBtn" class="back-btn">취소</button>
+                    <button type="submit" class="submit-btn submit-btn--sm" id="faqSaveBtn">저장</button>
+                </div>
+                <p class="submit-status" id="faqFormStatus" role="alert"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="common.js"></script>
+    <script src="faq-admin.js"></script>
+</body>
+
+</html>

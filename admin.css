@@ -198,3 +198,103 @@
         min-width: 0;
     }
 }
+
+/* ---------- FAQ 카드 목록 ---------- */
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.faq-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    background: var(--color-card-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+}
+
+.faq-card__title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-primary);
+    margin: 0 0 6px;
+}
+
+.faq-card__text {
+    font-size: 15px;
+    color: var(--color-ink);
+    margin: 0 0 6px;
+    white-space: pre-wrap;
+}
+
+.faq-card__keywords {
+    font-size: 13px;
+    color: var(--color-muted);
+    margin: 0;
+}
+
+.faq-card__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.faq-card__actions button {
+    white-space: nowrap;
+}
+
+.faq-delete-btn {
+    color: var(--color-danger);
+}
+
+/* ---------- FAQ 추가/수정 오버레이 ---------- */
+
+.faq-form-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 38, 32, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 50;
+}
+
+.faq-form-box {
+    background: #fff;
+    border-radius: var(--radius);
+    padding: 28px;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.faq-form-box textarea {
+    width: 100%;
+    min-height: 100px;
+    border: 3px solid var(--color-border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: inherit;
+    font-size: inherit;
+    resize: vertical;
+}
+
+.faq-form-box textarea:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 1px;
+    border-color: var(--color-primary);
+}
+
+.faq-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
