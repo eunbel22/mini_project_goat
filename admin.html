@@ -14,7 +14,10 @@
     <header class="top-bar">
         <div class="top-bar__inner">
             <span class="top-bar__logo">두두자격지원센터 · 어드민</span>
-            <button type="button" id="logoutBtn" class="font-toggle admin-hidden">로그아웃</button>
+            <nav class="top-bar__nav">
+                <a href="index.html" class="font-toggle">접수 화면 보기</a>
+                <button type="button" id="logoutBtn" class="font-toggle admin-hidden">로그아웃</button>
+            </nav>
         </div>
     </header>
 
@@ -114,7 +117,7 @@
     </main>
 
     <!-- Supabase 연결 시 아래 주석을 해제하세요 -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
     <script src="common.js"></script>
     <script src="admin.js"></script>
 </body>

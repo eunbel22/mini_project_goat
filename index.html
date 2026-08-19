@@ -13,10 +13,13 @@
     <header class="top-bar">
         <div class="top-bar__inner">
             <span class="top-bar__logo">두두자격지원센터</span>
-            <button type="button" id="fontToggle" class="font-toggle" aria-pressed="false">
-                <span class="font-toggle__label">글자 크게</span>
-                <span class="font-toggle__icon">가+</span>
-            </button>
+            <nav class="top-bar__nav">
+                <a href="chatbot.html" class="font-toggle">문의 챗봇</a>
+                <button type="button" id="fontToggle" class="font-toggle" aria-pressed="false">
+                    <span class="font-toggle__label">글자 크게</span>
+                    <span class="font-toggle__icon">가+</span>
+                </button>
+            </nav>
         </div>
     </header>
 
@@ -168,10 +171,13 @@
 
     <footer class="page-footer">
         두두자격지원센터 · 접수 문의는 챗봇 또는 센터로 연락 주세요
+        <br>
+        <a href="admin.html" class="footer-staff-link">직원이신가요? 어드민 로그인</a>
     </footer>
 
     <!-- Supabase 연결 시 아래 주석을 해제하세요 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="common.js"></script>
     <script src="script.js"></script>
 </body>
 

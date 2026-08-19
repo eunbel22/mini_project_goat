@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
-<title>두두자격지원센터 - 문의 챗봇</title>
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="chatbot.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+  <title>두두자격지원센터 - 문의 챗봇</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="chatbot.css">
 </head>
+
 <body>
 
   <header class="top-bar">
     <div class="top-bar__inner">
       <span class="top-bar__logo">두두자격지원센터 · 문의 챗봇</span>
-      <button type="button" id="fontToggle" class="font-toggle" aria-pressed="false">
-        <span class="font-toggle__label">글자 크게</span>
-        <span class="font-toggle__icon">가+</span>
-      </button>
+      <nav class="top-bar__nav">
+        <a href="index.html" class="font-toggle">접수 화면</a>
+        <button type="button" id="fontToggle" class="font-toggle" aria-pressed="false">
+          <span class="font-toggle__label">글자 크게</span>
+          <span class="font-toggle__icon">가+</span>
+        </button>
+      </nav>
     </div>
   </header>
 
@@ -48,4 +53,5 @@
 
   <script src="chatbot.js"></script>
 </body>
+
 </html>
