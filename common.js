@@ -5,8 +5,8 @@
 
 // ---- 빈칸: Supabase 연결 정보 ----
 // Supabase 대시보드 > Settings > API 에서 복사해서 넣으세요.
-const SUPABASE_URL = "https://ofpqspcpumnexfqcyurs.supabase.co"; // 예) "https://xxxxxxxx.supabase.co"
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mcHFzcGNwdW1uZXhmcWN5dXJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwOTk1MDEsImV4cCI6MjEwMjY3NTUwMX0.Z1qVsLPiFWrP8MYXQLc-ojxCqxJLnmup5nlQUyf6lE4"; // 예) "eyJhbGciOi..."
+const SUPABASE_URL = "https://ofpqspcpumnexfqcyurs.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mcHFzcGNwdW1uZXhmcWN5dXJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwOTk1MDEsImV4cCI6MjEwMjY3NTUwMX0.Z1qVsLPiFWrP8MYXQLc-ojxCqxJLnmup5nlQUyf6lE4";
 
 let supabaseClient = null;
 function initSupabase() {
