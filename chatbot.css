@@ -1,0 +1,117 @@
+/* ============================================
+   두두자격지원센터 - 챗봇 화면 스타일
+   styles.css의 색상 토큰을 이어받아 쓴다.
+   ============================================ */
+
+.chat-page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 24px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 80px);
+}
+
+.chat-page__notice {
+  background: #EAF1EE;
+  color: var(--color-primary);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  font-size: var(--fs-tag);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.chat-log {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  padding: 8px 2px 16px;
+  min-height: 240px;
+}
+
+.chat-bubble {
+  max-width: 85%;
+  padding: 14px 18px;
+  border-radius: 18px;
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.chat-bubble--bot {
+  align-self: flex-start;
+  background: #fff;
+  border: 2px solid var(--color-border);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-bubble--user {
+  align-self: flex-end;
+  background: var(--color-primary);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-bubble__source {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.chat-bubble--bot.chat-bubble--loading {
+  color: var(--color-muted);
+  font-style: normal;
+}
+
+.chat-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chat-chip {
+  border: 2px solid var(--color-border);
+  background: #fff;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 15px;
+  color: var(--color-primary);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.chat-chip:hover {
+  border-color: var(--color-primary);
+}
+
+.chat-input-bar {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input-bar input {
+  flex: 1;
+  min-height: var(--touch-min);
+  border: 3px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0 20px;
+  font-size: var(--fs-body);
+}
+
+.chat-input-bar input:focus {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 1px;
+  border-color: var(--color-primary);
+}
+
+.chat-back-link {
+  display: inline-block;
+  margin-top: 18px;
+  text-decoration: none;
+}

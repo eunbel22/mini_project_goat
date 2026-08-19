@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+<title>두두자격지원센터 - 문의 챗봇</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+
+  <header class="top-bar">
+    <div class="top-bar__inner">
+      <span class="top-bar__logo">두두자격지원센터 · 문의 챗봇</span>
+      <button type="button" id="fontToggle" class="font-toggle" aria-pressed="false">
+        <span class="font-toggle__label">글자 크게</span>
+        <span class="font-toggle__icon">가+</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="chat-page">
+    <p class="chat-page__notice">
+      한식조리기능사 · 공인중개사 · 요양보호사 관련 문의에 답해드려요.
+      저희가 확인한 내용만 안내하고, 확인 안 된 건 모른다고 말씀드려요.
+    </p>
+
+    <div id="chatLog" class="chat-log" aria-live="polite">
+      <div class="chat-bubble chat-bubble--bot">
+        안녕하세요! 무엇이 궁금하신가요? 예) "한식조리기능사 응시료가 얼마예요"
+      </div>
+    </div>
+
+    <div class="chat-examples" id="chatExamples">
+      <button type="button" class="chat-chip">한식조리기능사 응시료가 얼마예요</button>
+      <button type="button" class="chat-chip">요양보호사 접수비는 얼마인가요</button>
+      <button type="button" class="chat-chip">공인중개사 1차 지금 접수되나요</button>
+      <button type="button" class="chat-chip">실기시험도 접수해주나요</button>
+    </div>
+
+    <form id="chatForm" class="chat-input-bar">
+      <input type="text" id="chatInput" placeholder="궁금한 것을 물어보세요" autocomplete="off" required>
+      <button type="submit" id="chatSendBtn" class="submit-btn submit-btn--sm">보내기</button>
+    </form>
+
+    <a href="index.html" class="back-btn chat-back-link">← 접수 화면으로 돌아가기</a>
+  </main>
+
+  <script src="chatbot.js"></script>
+</body>
+</html>

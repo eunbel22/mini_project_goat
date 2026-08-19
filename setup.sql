@@ -179,19 +179,21 @@ alter table applications add constraint chk_yoyang_fields
   );
 
 -- ------------------------------------------------------------------
--- RLS: 접수는 누구나(anon) 가능, 조회는 서비스 역할만 (어드민 화면용)
+-- RLS: 접수는 누구나(anon) 가능, 조회는 로그인한 직원만
+-- (Supabase Auth로 직원 계정을 만들어야 어드민 화면 로그인이 된다:
+--  대시보드 > Authentication > Users > Add user)
 -- ------------------------------------------------------------------
 
 alter table applications enable row level security;
 
 create policy "누구나 접수 가능"
   on applications for insert
-  to anon
+  to anon, authenticated
   with check (true);
 
-create policy "서비스 역할만 조회"
+create policy "로그인한 직원만 조회"
   on applications for select
-  to service_role
+  to authenticated
   using (true);
 
 -- 인덱스: 어드민 화면에서 자격증별/날짜별 조회가 잦으므로
