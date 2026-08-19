@@ -3,9 +3,19 @@
 // 자격증 3종(한식조리기능사/공인중개사/요양보호사)의
 // 서로 다른 필드를 하나의 폼에서 동적으로 렌더링한다.
 //
-// Supabase 연결 설정은 common.js에 있습니다.
-// (index.html에서 common.js를 이 파일보다 먼저 불러와야 합니다)
-// ============================================
+// ---- Supabase 연결 정보 ----
+const SUPABASE_URL = "https://ofpqspcpumnexfqcyurs.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mcHFzcGNwdW1uZXhmcWN5dXJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwOTk1MDEsImV4cCI6MjEwMjY3NTUwMX0.Z1qVsLPiFWrP8MYXQLc-ojxCqxJLnmup5nlQUyf6lE4";
+
+let supabaseClient = null;
+function initSupabase() {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+    if (typeof window.supabase === "undefined") return null;
+    if (!supabaseClient) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+    return supabaseClient;
+}
 
 // ---- 참조 데이터 (01_form_정책.md 기준) ----
 
