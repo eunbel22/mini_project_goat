@@ -1,0 +1,200 @@
+/* ============================================
+   두두자격지원센터 - 어드민 화면 스타일
+   styles.css의 컬러 토큰을 그대로 이어받아 쓴다.
+   직원 3명이 매일 쓸 화면이라 정보 밀도는 높이되,
+   글자 크기·버튼 크기는 여전히 여유 있게.
+   ============================================ */
+
+.admin-body {
+    background: var(--color-bg);
+}
+
+.admin-hidden {
+    display: none !important;
+}
+
+.admin-page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 20px 64px;
+}
+
+.admin-page--narrow {
+    max-width: 420px;
+    padding-top: 64px;
+}
+
+/* ---------- 요약 카드 ---------- */
+
+.stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.stat-card {
+    background: var(--color-card-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+}
+
+.stat-card__label {
+    font-size: 15px;
+    color: var(--color-muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.stat-card__value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-primary);
+}
+
+/* ---------- 필터 바 ---------- */
+
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: end;
+    background: var(--color-card-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 150px;
+}
+
+.filter-field label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-muted);
+}
+
+.filter-field input,
+.filter-field select {
+    min-height: 48px;
+    border: 2px solid var(--color-border);
+    border-radius: 10px;
+    padding: 0 12px;
+    font-size: 16px;
+    background: #fff;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.submit-btn--sm {
+    min-height: 48px;
+    padding: 0 20px;
+    font-size: 16px;
+    width: auto;
+}
+
+/* ---------- 테이블 툴바 ---------- */
+
+.table-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.table-toolbar__count {
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-right: auto;
+}
+
+/* ---------- 테이블 ---------- */
+
+.table-wrap {
+    overflow-x: auto;
+    background: var(--color-card-bg);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius);
+}
+
+.app-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+.app-table th {
+    background: var(--color-primary);
+    color: #fff;
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+}
+
+.app-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.app-table tbody tr:hover {
+    background: #F5F1E8;
+}
+
+.app-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.status-badge--접수완료 {
+    background: #EAF1EE;
+    color: var(--color-success);
+}
+
+.status-badge--결제대기 {
+    background: #FFF4E8;
+    color: var(--color-accent-dark);
+}
+
+.status-badge--취소 {
+    background: #FBEAEA;
+    color: var(--color-danger);
+}
+
+.table-empty {
+    text-align: center;
+    padding: 40px 20px !important;
+    color: var(--color-muted);
+    font-weight: 700;
+    white-space: normal;
+}
+
+@media (max-width: 640px) {
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-field {
+        min-width: 0;
+    }
+}
