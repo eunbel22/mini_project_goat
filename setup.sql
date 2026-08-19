@@ -27,6 +27,18 @@ create table if not exists applications (
   -- 한식조리기능사 전용
   exam_region           text,   -- 17개 광역 중 하나
   exam_session          text,   -- 09:00 / 10:30 / 13:00 / 14:30 / 16:00
+  exam_date             date,   -- 상시CBT는 신청자가 직접 고르는 시험일
+
+  -- 응시자격유형: 신청 시점 스냅샷. 한식조리기능사는 정책상 '제한없음'
+  -- 고정이라 트리거가 자동으로 채운다. 공인중개사는 정책 문서에 값
+  -- 목록이 없어 확정할 수 없으므로 신청자가 직접 선택한다.
+  -- 요양보호사는 교육수료가 곧 응시자격이라 해당 없음(null).
+  eligibility_type      text check (eligibility_type in ('제한없음', '관련학과졸업', '경력', '기타')),
+
+  -- 관리자 편의용 파생컬럼. qualification 하나로 100% 결정되는 값이라
+  -- 신청자 입력을 받지 않고 트리거가 채운다.
+  grade                 text,
+  exam_type             text,
 
   -- 공인중개사 전용
   exam_stage            text check (exam_stage in ('1차', '2차')),
@@ -103,6 +115,25 @@ begin
       lpad(floor(random() * 1000000)::text, 6, '0');
   end if;
 
+  -- 4) 등급 / 시험유형 - qualification에서 100% 유도되는 관리자용 파생값
+  new.grade := case
+    when new.qualification = '한식조리기능사' then '기능사'
+    else null  -- 공인중개사·요양보호사는 '등급' 개념 자체가 없음
+  end;
+
+  new.exam_type := case
+    when new.qualification = '한식조리기능사' then '상시CBT'
+    when new.qualification = '공인중개사' then '연1회'
+    when new.qualification = '요양보호사' then '상시'
+    else null
+  end;
+
+  -- 5) 응시자격유형 - 한식조리기능사는 정책상 고정값이라 자동 채움.
+  --    공인중개사는 신청자가 select로 직접 선택해서 보낸 값을 그대로 쓴다.
+  if new.qualification = '한식조리기능사' and new.eligibility_type is null then
+    new.eligibility_type := '제한없음';
+  end if;
+
   return new;
 end;
 $$ language plpgsql;
@@ -120,13 +151,13 @@ create trigger trg_applications_before_insert
 alter table applications add constraint chk_hansik_fields
   check (
     qualification <> '한식조리기능사'
-    or (exam_region is not null and exam_session is not null)
+    or (exam_region is not null and exam_session is not null and exam_date is not null)
   );
 
 alter table applications add constraint chk_gongin_fields
   check (
     qualification <> '공인중개사'
-    or (exam_stage is not null and exam_region is not null)
+    or (exam_stage is not null and exam_region is not null and eligibility_type is not null)
   );
 
 alter table applications add constraint chk_yoyang_fields
@@ -138,6 +169,7 @@ alter table applications add constraint chk_yoyang_fields
       and training_completion_date is not null
       and test_center_code is not null
       and test_time_slot is not null
+      and exam_date is not null
     )
   );
 
