@@ -1,0 +1,365 @@
+/* ============================================
+   두두자격지원센터 - 디자인 토큰
+   대상: 50~70대 어르신, 컴퓨터 비숙련자
+   원칙: 크게, 진하게, 한 화면에 하나의 결정만
+   ============================================ */
+
+:root {
+    /* Color */
+    --color-bg: #FAF7F0;
+    /* 따뜻한 종이색 배경 */
+    --color-ink: #2B2620;
+    /* 본문 글자 - 완전 검정 대신 부드럽게 */
+    --color-primary: #1B4B43;
+    /* 짙은 솔잎색 - 신뢰감, 헤더/보조요소 */
+    --color-accent: #C6672D;
+    /* 벽돌빛 주황 - 행동 유도(제출/선택) */
+    --color-accent-dark: #A6501F;
+    --color-success: #3A7D44;
+    --color-danger: #B3261E;
+    --color-border: #D8CFC0;
+    --color-card-bg: #FFFFFF;
+    --color-muted: #6B6455;
+
+    /* Type */
+    --font-base: "Pretendard", -apple-system, "Malgun Gothic", system-ui, sans-serif;
+    --fs-body: 19px;
+    --fs-lg: 24px;
+    --fs-xl: 32px;
+    --fs-tag: 16px;
+
+    /* Layout */
+    --radius: 16px;
+    --touch-min: 64px;
+    --max-width: 640px;
+}
+
+body.font-large {
+    --fs-body: 23px;
+    --fs-lg: 28px;
+    --fs-xl: 38px;
+    --fs-tag: 19px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-base);
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+/* ---------- 상단바 ---------- */
+
+.top-bar {
+    background: var(--color-primary);
+    color: #fff;
+    padding: 14px 16px;
+}
+
+.top-bar__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.top-bar__logo {
+    font-size: var(--fs-lg);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.font-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    border-radius: 999px;
+    padding: 10px 18px;
+    cursor: pointer;
+    min-height: 48px;
+}
+
+.font-toggle:hover,
+.font-toggle[aria-pressed="true"] {
+    background: rgba(255, 255, 255, 0.24);
+}
+
+.font-toggle__icon {
+    font-weight: 800;
+}
+
+/* ---------- 레이아웃 ---------- */
+
+.page {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 32px 20px 64px;
+}
+
+.step--hidden {
+    display: none;
+}
+
+.page-title {
+    font-size: var(--fs-xl);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+    color: var(--color-primary);
+}
+
+.page-sub {
+    font-size: var(--fs-lg);
+    color: var(--color-muted);
+    margin: 0 0 28px;
+}
+
+/* ---------- 자격증 카드 ---------- */
+
+.cert-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cert-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    min-height: var(--touch-min);
+    background: var(--color-card-bg);
+    border: 3px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.cert-card:hover,
+.cert-card:focus-visible {
+    border-color: var(--color-primary);
+}
+
+.cert-card:active {
+    transform: scale(0.99);
+}
+
+.cert-card__icon {
+    font-size: 40px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.cert-card__name {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    flex-grow: 1;
+}
+
+.cert-card__tag {
+    font-size: var(--fs-tag);
+    color: var(--color-primary);
+    background: #EAF1EE;
+    padding: 6px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ---------- 뒤로가기 ---------- */
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: var(--fs-tag);
+    font-weight: 700;
+    padding: 10px 0;
+    margin-bottom: 12px;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+/* ---------- 안내 배너 ---------- */
+
+.notice {
+    background: #FFF4E8;
+    border: 2px solid #F0C89A;
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    font-size: var(--fs-tag);
+    margin-bottom: 24px;
+    display: none;
+}
+
+.notice.notice--show {
+    display: block;
+}
+
+/* ---------- 폼 ---------- */
+
+.apply-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.field label {
+    display: block;
+    font-size: var(--fs-tag);
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.required {
+    color: var(--color-danger);
+}
+
+.field input,
+.field select {
+    width: 100%;
+    min-height: var(--touch-min);
+    border: 3px solid var(--color-border);
+    border-radius: 12px;
+    padding: 0 18px;
+    background: #fff;
+    color: var(--color-ink);
+}
+
+.field input:focus,
+.field select:focus {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 1px;
+    border-color: var(--color-primary);
+}
+
+.field-hint {
+    font-size: 15px;
+    color: var(--color-muted);
+    margin: 6px 0 0;
+}
+
+.field-error {
+    font-size: 15px;
+    color: var(--color-danger);
+    font-weight: 700;
+    margin: 6px 0 0;
+    min-height: 20px;
+}
+
+/* ---------- 버튼 ---------- */
+
+.submit-btn {
+    min-height: var(--touch-min);
+    background: var(--color-accent);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-size: var(--fs-lg);
+    font-weight: 800;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.submit-btn:hover {
+    background: var(--color-accent-dark);
+}
+
+.submit-btn:disabled {
+    background: var(--color-border);
+    color: var(--color-muted);
+    cursor: not-allowed;
+}
+
+.submit-status {
+    text-align: center;
+    font-weight: 700;
+    min-height: 24px;
+    color: var(--color-danger);
+}
+
+/* ---------- 완료 화면 ---------- */
+
+.done-box {
+    text-align: center;
+    background: var(--color-card-bg);
+    border: 3px solid var(--color-success);
+    border-radius: var(--radius);
+    padding: 40px 24px;
+}
+
+.done-box__icon {
+    font-size: 56px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.done-box__note {
+    font-size: var(--fs-tag);
+    color: var(--color-muted);
+    line-height: 1.8;
+    margin: 20px 0 28px;
+}
+
+.done-box__note a {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.done-box .submit-btn {
+    width: 100%;
+}
+
+/* ---------- 푸터 ---------- */
+
+.page-footer {
+    text-align: center;
+    font-size: 15px;
+    color: var(--color-muted);
+    padding: 24px 20px 48px;
+}
+
+/* ---------- 반응형 ---------- */
+
+@media (min-width: 640px) {
+    .page {
+        padding-top: 48px;
+    }
+}
+
+/* 키보드 포커스 명시 (접근성) */
+:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+    <title>두두자격지원센터 - 접수 신청</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <header class="top-bar">
+        <div class="top-bar__inner">
+            <span class="top-bar__logo">두두자격지원센터</span>
+            <button type="button" id="fontToggle" class="font-toggle" aria-pressed="false">
+                <span class="font-toggle__label">글자 크게</span>
+                <span class="font-toggle__icon">가+</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="page">
+
+        <!-- 1단계: 자격증 선택 -->
+        <section id="step-select" class="step">
+            <h1 class="page-title">어떤 자격증을 신청하시나요?</h1>
+            <p class="page-sub">아래에서 하나를 골라 눌러 주세요.</p>
+
+            <div class="cert-grid" id="certGrid">
+                <button type="button" class="cert-card" data-cert="한식조리기능사" data-fee="14500">
+                    <span class="cert-card__icon" aria-hidden="true">🍳</span>
+                    <span class="cert-card__name">한식조리기능사</span>
+                    <span class="cert-card__tag">상시 접수</span>
+                </button>
+
+                <button type="button" class="cert-card" data-cert="요양보호사" data-fee="">
+                    <span class="cert-card__icon" aria-hidden="true">🤝</span>
+                    <span class="cert-card__name">요양보호사</span>
+                    <span class="cert-card__tag">상시 접수</span>
+                </button>
+
+                <button type="button" class="cert-card" data-cert="공인중개사" data-fee="">
+                    <span class="cert-card__icon" aria-hidden="true">🏠</span>
+                    <span class="cert-card__name">공인중개사</span>
+                    <span class="cert-card__tag">연 1회 접수</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 2단계: 신청서 입력 -->
+        <section id="step-form" class="step step--hidden">
+            <button type="button" id="backBtn" class="back-btn">
+                <span aria-hidden="true">←</span> 자격증 다시 고르기
+            </button>
+
+            <h1 class="page-title">신청서를 작성해 주세요</h1>
+            <p class="page-sub">
+                선택한 자격증: <strong id="selectedCertLabel"></strong>
+            </p>
+
+            <div id="certNotice" class="notice" role="status"></div>
+
+            <form id="applyForm" class="apply-form" novalidate>
+                <div class="field">
+                    <label for="name">이름 <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" autocomplete="name" required placeholder="예) 김영자">
+                    <p class="field-error" id="nameError" role="alert"></p>
+                </div>
+
+                <div class="field">
+                    <label for="phone">연락처 <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" autocomplete="tel" required
+                        placeholder="예) 010-1234-5678">
+                    <p class="field-hint">숫자만 입력하셔도 됩니다.</p>
+                    <p class="field-error" id="phoneError" role="alert"></p>
+                </div>
+
+                <div class="field">
+                    <label for="path">어떻게 접수하러 오셨나요?</label>
+                    <select id="path" name="path">
+                        <option value="방문">직접 방문</option>
+                        <option value="전화">전화 문의 후 대신 입력</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    신청서 제출하기
+                </button>
+
+                <p class="submit-status" id="submitStatus" role="alert"></p>
+            </form>
+        </section>
+
+        <!-- 3단계: 완료 -->
+        <section id="step-done" class="step step--hidden">
+            <div class="done-box">
+                <span class="done-box__icon" aria-hidden="true">✅</span>
+                <h1 class="page-title">신청이 접수되었습니다</h1>
+                <p class="page-sub" id="doneSummary"></p>
+                <p class="done-box__note">
+                    접수 확인은 저희 센터에서 전화로 다시 안내드립니다.<br>
+                    궁금하신 점은 <a href="chatbot.html">문의 챗봇</a>에서도 물어보실 수 있어요.
+                </p>
+                <button type="button" id="restartBtn" class="submit-btn">
+                    다른 신청서 작성하기
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="page-footer">
+        두두자격지원센터 · 접수 문의는 챗봇 또는 센터로 연락 주세요
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
