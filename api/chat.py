@@ -222,6 +222,10 @@ def load_faq_rows():
                 headers={
                     "apikey": SUPABASE_ANON_KEY,
                     "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
+                    # Supabase REST(PostgREST)는 Range 헤더가 없으면 기본
+                    # 1,000행까지만 돌려준다. 넉넉하게 요청해서 전량을 받는다.
+                    "Range-Unit": "items",
+                    "Range": "0-19999",
                 },
             )
             resp = urllib.request.urlopen(req, timeout=8)
