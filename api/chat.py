@@ -38,7 +38,9 @@ MIN_SCORE = 0.05  # 코사인 유사도 임계값 (TF-IDF는 0~1 사이 값이�
 TOP_K = 3
 CACHE_TTL_SECONDS = 300  # 5분
 
-SYNONYMS = {
+# Supabase synonyms 테이블 연결이 실패했을 때만 쓰는 폴백.
+# 평소엔 이 값이 아니라 Supabase 테이블 내용이 쓰인다 (동의어 어드민에서 관리).
+FALLBACK_SYNONYMS = {
     "접수비": {"응시료"}, "시험비": {"응시료"}, "돈": {"응시료"},
     "1차": {"필기"}, "이론": {"필기"}, "쓰는거": {"필기"}, "쓰는것": {"필기"},
     "2차": {"실기"}, "실습": {"실기"}, "직접하는거": {"실기"}, "직접하는것": {"실기"},
@@ -110,9 +112,43 @@ def tokenize_counts(text: str) -> dict:
     return dict(counts)
 
 
+_syn_cache = {"synonyms": None, "built_at": 0}
+
+
+def load_synonym_rows():
+    if SUPABASE_URL and SUPABASE_ANON_KEY:
+        try:
+            url = f"{SUPABASE_URL}/rest/v1/synonyms?select=informal,formal"
+            req = urllib.request.Request(
+                url,
+                headers={
+                    "apikey": SUPABASE_ANON_KEY,
+                    "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
+                },
+            )
+            resp = urllib.request.urlopen(req, timeout=8)
+            rows = json.loads(resp.read())
+            mapping = defaultdict(set)
+            for r in rows:
+                mapping[r["informal"]].add(r["formal"])
+            return dict(mapping)
+        except Exception as e:
+            print(f"[동의어 조회 오류 - 폴백으로 대체] {e}")
+
+    return FALLBACK_SYNONYMS
+
+
+def get_synonyms() -> dict:
+    now = time.time()
+    if _syn_cache["synonyms"] is None or (now - _syn_cache["built_at"]) > CACHE_TTL_SECONDS:
+        _syn_cache["synonyms"] = load_synonym_rows()
+        _syn_cache["built_at"] = now
+    return _syn_cache["synonyms"]
+
+
 def expand_query(question: str) -> str:
     expanded = question
-    for informal, formal in SYNONYMS.items():
+    for informal, formal in get_synonyms().items():
         if informal in question:
             expanded += " " + " ".join(formal)
     return expanded
