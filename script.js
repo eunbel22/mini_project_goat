@@ -206,6 +206,57 @@ const fontToggle = document.getElementById("fontToggle");
 
 document.getElementById("discountType").addEventListener("change", updateFeePreview);
 
+// ---- 생년월일: 연(직접입력 4자리) / 월 / 일 (셀렉트) ----
+
+const birthYearInput = document.getElementById("birthYear");
+const birthMonthSelect = document.getElementById("birthMonth");
+const birthDaySelect = document.getElementById("birthDay");
+
+for (let m = 1; m <= 12; m++) {
+    const opt = document.createElement("option");
+    opt.value = String(m).padStart(2, "0");
+    opt.textContent = `${m}월`;
+    birthMonthSelect.appendChild(opt);
+}
+for (let d = 1; d <= 31; d++) {
+    const opt = document.createElement("option");
+    opt.value = String(d).padStart(2, "0");
+    opt.textContent = `${d}일`;
+    birthDaySelect.appendChild(opt);
+}
+
+// 연도 4자리 숫자만 입력받고, 4자리를 다 채우면 자동으로 월 선택으로 넘어간다.
+birthYearInput.addEventListener("input", () => {
+    birthYearInput.value = birthYearInput.value.replace(/\D/g, "").slice(0, 4);
+    if (birthYearInput.value.length === 4) {
+        birthMonthSelect.focus();
+    }
+});
+
+function getBirthDateValue() {
+    const y = birthYearInput.value;
+    const m = birthMonthSelect.value;
+    const d = birthDaySelect.value;
+    if (y.length !== 4 || !m || !d) return null;
+    return `${y}-${m}-${d}`;
+}
+
+// ---- 연락처: 010 프리필 + 입력할 때마다 자동 하이픈 ----
+
+const phoneInput = document.getElementById("phone");
+phoneInput.value = "010-";
+
+phoneInput.addEventListener("input", () => {
+    const digits = phoneInput.value.replace(/\D/g, "").slice(0, 11);
+    let formatted = digits;
+    if (digits.length > 7) {
+        formatted = `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+    } else if (digits.length > 3) {
+        formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    }
+    phoneInput.value = formatted;
+});
+
 // ---- 글자 크게 보기 ----
 fontToggle.addEventListener("click", () => {
     const isLarge = document.body.classList.toggle("font-large");
@@ -232,6 +283,10 @@ document.getElementById("backBtn").addEventListener("click", () => goToStep("sel
 
 document.getElementById("restartBtn").addEventListener("click", () => {
     applyForm.reset();
+    phoneInput.value = "010-";
+    birthYearInput.value = "";
+    birthMonthSelect.value = "";
+    birthDaySelect.value = "";
     selectedCert = null;
     goToStep("select");
 });
@@ -278,7 +333,11 @@ function validateForm() {
                 : ""
     );
 
-    setError("birthDateError", val("birthDate") ? "" : "생년월일을 선택해 주세요.");
+    const birthDateVal = getBirthDateValue();
+    setError(
+        "birthDateError",
+        birthDateVal ? "" : "생년월일을 연/월/일 모두 입력해 주세요."
+    );
     setError("genderError", document.querySelector('input[name="gender"]:checked') ? "" : "성별을 선택해 주세요.");
 
     // 연락처: 01로 시작하는 10~11자리만 허용.
@@ -327,7 +386,7 @@ applyForm.addEventListener("submit", async (e) => {
     const payload = {
         qualification: selectedCert,
         name: val("name"),
-        birth_date: val("birthDate"),
+        birth_date: getBirthDateValue(),
         gender,
         phone,
         discount_type: val("discountType"),

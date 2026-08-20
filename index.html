@@ -77,8 +77,20 @@
                     </div>
 
                     <div class="field">
-                        <label for="birthDate">생년월일 <span class="required">*</span></label>
-                        <input type="date" id="birthDate" name="birthDate" required>
+                        <label for="birthYear">생년월일 <span class="required">*</span></label>
+                        <div class="birth-date-row">
+                            <input type="text" id="birthYear" inputmode="numeric" maxlength="4" placeholder="YYYY"
+                                class="birth-year-input" autocomplete="bday-year">
+                            <span class="birth-date-unit">년</span>
+                            <select id="birthMonth" class="birth-select" autocomplete="bday-month">
+                                <option value="">월</option>
+                            </select>
+                            <span class="birth-date-unit">월</span>
+                            <select id="birthDay" class="birth-select" autocomplete="bday-day">
+                                <option value="">일</option>
+                            </select>
+                            <span class="birth-date-unit">일</span>
+                        </div>
                         <p class="field-error" id="birthDateError" role="alert"></p>
                     </div>
 
@@ -98,8 +110,8 @@
                     <div class="field">
                         <label for="phone">연락처 <span class="required">*</span></label>
                         <input type="tel" id="phone" name="phone" autocomplete="tel" required
-                            placeholder="예) 010-1234-5678">
-                        <p class="field-hint">숫자만 입력하셔도 됩니다.</p>
+                            placeholder="010-1234-5678">
+                        <p class="field-hint">숫자만 이어서 입력하시면 자동으로 하이픈(-)이 붙어요.</p>
                         <p class="field-error" id="phoneError" role="alert"></p>
                     </div>
                 </fieldset>
