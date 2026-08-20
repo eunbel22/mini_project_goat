@@ -199,3 +199,50 @@ create policy "로그인한 직원만 조회"
 -- 인덱스: 어드민 화면에서 자격증별/날짜별 조회가 잦으므로
 create index if not exists idx_applications_qualification on applications (qualification);
 create index if not exists idx_applications_created_at on applications (created_at desc);
+
+
+-- ============================================================
+-- faq_items 테이블 (FAQ 어드민 + 챗봇용)
+-- setup.sql에 이 섹션이 빠져있었음 - 이 파일을 setup.sql 맨 아래에
+-- 이어붙이면 DB를 처음부터 다시 만들 때도 FAQ 어드민이 정상 작동한다.
+-- ============================================================
+
+create table if not exists faq_items (
+  slug        text primary key,
+  title       text not null,
+  text        text not null,
+  keywords    text[] not null default '{}',
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+create or replace function fn_faq_items_touch_updated_at()
+returns trigger as $$
+begin
+  new.updated_at := now();
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists trg_faq_items_touch on faq_items;
+create trigger trg_faq_items_touch
+  before update on faq_items
+  for each row
+  execute function fn_faq_items_touch_updated_at();
+
+alter table faq_items enable row level security;
+
+create policy "누구나 FAQ 조회 가능"
+  on faq_items for select
+  to anon, authenticated
+  using (true);
+
+create policy "로그인한 직원만 FAQ 수정"
+  on faq_items for all
+  to authenticated
+  using (true)
+  with check (true);
+
+grant usage on schema public to anon, authenticated;
+grant select on faq_items to anon, authenticated;
+grant insert, update, delete on faq_items to authenticated;
