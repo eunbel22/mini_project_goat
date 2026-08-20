@@ -104,6 +104,7 @@ function renderStats(rows) {
     const stats = [
         { label: "오늘 접수", value: todayCount },
         { label: "전체 접수", value: rows.length },
+        { label: "📞 간편신청 (전화확인필요)", value: rows.filter(r => r.application_mode === "simple").length, highlight: true },
         { label: "한식조리기능사", value: countBy("한식조리기능사") },
         { label: "공인중개사", value: countBy("공인중개사") },
         { label: "요양보호사", value: countBy("요양보호사") },
@@ -113,7 +114,7 @@ function renderStats(rows) {
     ];
 
     document.getElementById("statRow").innerHTML = stats.map(s => `
-    <div class="stat-card">
+    <div class="stat-card${s.highlight ? " stat-card--highlight" : ""}">
       <div class="stat-card__label">${s.label}</div>
       <div class="stat-card__value">${s.value.toLocaleString("ko-KR")}</div>
     </div>
@@ -125,6 +126,7 @@ document.getElementById("applyFilterBtn").addEventListener("click", applyFilters
 document.getElementById("resetFilterBtn").addEventListener("click", () => {
     document.getElementById("filterQualification").value = "";
     document.getElementById("filterStatus").value = "";
+    document.getElementById("filterMode").value = "";
     document.getElementById("filterDateFrom").value = "";
     document.getElementById("filterDateTo").value = "";
     document.getElementById("filterKeyword").value = "";
@@ -135,6 +137,7 @@ document.getElementById("refreshBtn").addEventListener("click", loadApplications
 function applyFilters() {
     const qualification = document.getElementById("filterQualification").value;
     const status = document.getElementById("filterStatus").value;
+    const mode = document.getElementById("filterMode").value;
     const dateFrom = document.getElementById("filterDateFrom").value;
     const dateTo = document.getElementById("filterDateTo").value;
     const keyword = document.getElementById("filterKeyword").value.trim();
@@ -143,6 +146,7 @@ function applyFilters() {
 
     if (qualification) rows = rows.filter(r => r.qualification === qualification);
     if (status) rows = rows.filter(r => r.application_status === status);
+    if (mode) rows = rows.filter(r => r.application_mode === mode);
     if (dateFrom) rows = rows.filter(r => r.created_at?.slice(0, 10) >= dateFrom);
     if (dateTo) rows = rows.filter(r => r.created_at?.slice(0, 10) <= dateTo);
     if (keyword) {
@@ -168,7 +172,7 @@ function renderTable(rows) {
     <tr>
       <td>${r.receipt_number ?? "-"}</td>
       <td>${r.qualification}</td>
-      <td>${r.name}</td>
+      <td>${r.name}${r.application_mode === "simple" ? ' <span class="mode-badge">📞 전화확인필요</span>' : ""}</td>
       <td>${r.phone}</td>
       <td>${r.exam_date ?? "-"}</td>
       <td>${examLocationLabel(r)}</td>
