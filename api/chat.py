@@ -227,7 +227,13 @@ def answer(question: str) -> dict:
         }
 
     faq_text = "\n".join(f"- {faq['title']}: {faq['text']}" for _, faq in hits)
-    source = ", ".join(faq["title"] for _, faq in hits)
+    # 같은 자격증·같은 주제의 통화가 여러 건이면 제목이 겹칠 수 있어서,
+    # 표시할 때는 중복을 제거한다 (순서는 그대로 유지).
+    seen_titles = []
+    for _, faq in hits:
+        if faq["title"] not in seen_titles:
+            seen_titles.append(faq["title"])
+    source = ", ".join(seen_titles)
 
     if GEMINI_API_KEY:
         try:
