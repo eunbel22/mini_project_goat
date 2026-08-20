@@ -64,6 +64,33 @@ SUFFIXES = [
     "야", "가", "는", "은", "이", "을", "를", "도", "만", "어", "지", "다", "요",
 ]
 
+CERT_ALIAS = {
+    "한식조리기능사": "한식조리기능사", "한식조리": "한식조리기능사", "한식": "한식조리기능사",
+    "지게차운전기능사": "지게차운전기능사", "지게차": "지게차운전기능사",
+    "굴착기운전기능사": "굴착기운전기능사", "굴삭기운전기능사": "굴착기운전기능사",
+    "굴착기": "굴착기운전기능사", "굴삭기": "굴착기운전기능사",
+    "포크레인": "굴착기운전기능사", "포클레인": "굴착기운전기능사",
+    "요양보호사": "요양보호사", "요양사": "요양보호사",
+    "전기기능사": "전기기능사", "전기": "전기기능사",
+    "위생사": "위생사",
+    "손해평가사": "손해평가사", "손평": "손해평가사",
+    "공인중개사": "공인중개사", "중개사": "공인중개사",
+}
+CERT_NAMES = list(CERT_ALIAS.keys())
+
+
+def detect_cert(question: str) -> str | None:
+    """질문에서 언급된 자격증의 정식 명칭을 찾는다. 없으면 None."""
+    # 긴 이름부터 확인해서 '한식'이 '한식조리기능사'보다 먼저 매칭되는 걸 방지한다.
+    for alias in sorted(CERT_ALIAS, key=len, reverse=True):
+        if alias in question:
+            return CERT_ALIAS[alias]
+    return None
+
+
+def mentions_cert(question: str) -> bool:
+    return detect_cert(question) is not None
+
 
 def _normalize(word: str) -> str:
     for suf in sorted(SUFFIXES, key=len, reverse=True):
@@ -96,16 +123,22 @@ def expand_query(question: str) -> str:
 # ------------------------------------------------------------------
 
 class TfidfIndex:
+    """검색(랭킹)은 제목+키워드만 본다. 본문(text)은 사람이 큐레이션한 게
+    아니라 통화 내용을 그대로 옮긴 긴 문단이라, 점수 계산에 섞으면
+    문서 벡터 크기만 커져서 코사인 유사도가 희석된다(길이가 긴 문서일수록
+    같은 단어 겹침이어도 점수가 낮아지는 문제). 실제 답변 내용은 여전히
+    faq['text']를 그대로 쓴다 - 검색 기준만 좁히는 것이다."""
+
     def __init__(self, faqs: list):
         self.faqs = faqs
         n = len(faqs)
 
-        doc_term_counts = []  # 문서별 단어 빈도
-        df = defaultdict(int)  # 단어별 등장 문서 수
+        doc_term_counts = []
+        df = defaultdict(int)
 
         for faq in faqs:
-            combined = faq["title"] + " " + " ".join(faq.get("keywords", [])) + " " + faq["text"]
-            counts = tokenize_counts(combined)
+            title_kw = faq["title"] + " " + " ".join(faq.get("keywords", []))
+            counts = tokenize_counts(title_kw)
             doc_term_counts.append(counts)
             for term in counts:
                 df[term] += 1
@@ -140,6 +173,26 @@ class TfidfIndex:
         candidate_ids = set()
         for term in q_counts:
             candidate_ids.update(self.inverted.get(term, []))
+
+        # 질문에 자격증명이 있으면 그 자격증 항목으로만 후보를 좁힌다.
+        # (다른 자격증 항목의 원문 대사에 우연히 겹치는 단어가 있어서
+        #  엉뚱한 자격증으로 새는 걸 막는다. 자격증명이 없으면 '공통'
+        #  항목만 남긴다.)
+        detected_cert = detect_cert(question)
+        if detected_cert:
+            cert_ids = {
+                doc_id for doc_id in candidate_ids
+                if self.faqs[doc_id]["title"].startswith(detected_cert)
+            }
+            if cert_ids:
+                candidate_ids = cert_ids
+        else:
+            common_ids = {
+                doc_id for doc_id in candidate_ids
+                if "공통" in self.faqs[doc_id].get("keywords", [])
+            }
+            if common_ids:
+                candidate_ids = common_ids
 
         scored = []
         for doc_id in candidate_ids:
