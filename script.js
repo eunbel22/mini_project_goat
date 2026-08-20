@@ -267,12 +267,25 @@ function validateForm() {
         if (msg) valid = false;
     };
 
-    setError("nameError", val("name") ? "" : "이름을 입력해 주세요.");
+    // 이름: 한글/영문/공백만, 1~30자 (02_접수DB_필드명세.md 기준 VARCHAR(30))
+    // QA E2/E3/E9에서 특수문자·숫자만·50자 이상이 그냥 통과되던 문제를 막는다.
+    const nameVal = (val("name") || "").trim();
+    const namePattern = /^[가-힣a-zA-Z\s]{1,30}$/;
+    setError(
+        "nameError",
+        !nameVal ? "이름을 입력해 주세요."
+            : !namePattern.test(nameVal) ? "이름은 한글 또는 영문으로 30자 이내로 입력해 주세요."
+                : ""
+    );
+
     setError("birthDateError", val("birthDate") ? "" : "생년월일을 선택해 주세요.");
     setError("genderError", document.querySelector('input[name="gender"]:checked') ? "" : "성별을 선택해 주세요.");
 
+    // 연락처: 01로 시작하는 10~11자리만 허용.
+    // QA E4/E5에서 "00000000000"(0만 11개), 17자리 이상도 통과되던 문제를 막는다.
     const phoneDigits = (val("phone") || "").replace(/\D/g, "");
-    setError("phoneError", phoneDigits.length >= 9 ? "" : "연락처를 숫자로 입력해 주세요.");
+    const phonePattern = /^01[0-9]{8,9}$/;
+    setError("phoneError", phonePattern.test(phoneDigits) ? "" : "올바른 휴대전화 번호를 입력해 주세요. (예: 01012345678)");
 
     // 자격증별 필수 필드 검증
     if (selectedCert === "한식조리기능사") {
