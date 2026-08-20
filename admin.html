@@ -117,17 +117,86 @@
                         <th>결제수단</th>
                         <th>상태</th>
                         <th>접수일시</th>
+                        <th>관리</th>
                     </tr>
                 </thead>
                 <tbody id="appTableBody">
                     <tr>
-                        <td colspan="10" class="table-empty">불러오는 중...</td>
+                        <td colspan="11" class="table-empty">불러오는 중...</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
     </main>
+
+    <!-- 수정 폼 오버레이 -->
+    <div id="editFormOverlay" class="faq-form-overlay admin-hidden">
+        <div class="faq-form-box">
+            <h2 class="page-title" style="font-size: 22px;">신청 정보 수정</h2>
+            <p class="page-sub" id="editModeNotice"></p>
+
+            <form id="editForm" class="apply-form">
+                <input type="hidden" id="editId">
+
+                <fieldset class="field-group">
+                    <legend class="field-group__title">신청자 정보</legend>
+                    <div class="field">
+                        <label for="editName">이름 <span class="required">*</span></label>
+                        <input type="text" id="editName" required>
+                    </div>
+                    <div class="field">
+                        <label for="editBirthDate">생년월일</label>
+                        <input type="date" id="editBirthDate">
+                    </div>
+                    <div class="field">
+                        <label>성별</label>
+                        <div class="radio-row">
+                            <label class="radio-pill"><input type="radio" name="editGender" value="남"> 남</label>
+                            <label class="radio-pill"><input type="radio" name="editGender" value="여"> 여</label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="editPhone">연락처 <span class="required">*</span></label>
+                        <input type="tel" id="editPhone" required>
+                    </div>
+                </fieldset>
+
+                <fieldset class="field-group">
+                    <legend class="field-group__title">시험 정보</legend>
+                    <div id="editCertFields"></div>
+                </fieldset>
+
+                <fieldset class="field-group">
+                    <legend class="field-group__title">결제 정보</legend>
+                    <div class="field">
+                        <label for="editDiscountType">감면 대상</label>
+                        <select id="editDiscountType">
+                            <option value="없음">해당 없음</option>
+                            <option value="장애인">장애인 (50% 감면)</option>
+                            <option value="기초생활수급자">기초생활수급자 (50% 감면)</option>
+                            <option value="국가유공자">국가유공자 (50% 감면)</option>
+                            <option value="차상위계층">차상위계층 (50% 감면)</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="editPaymentMethod">결제 수단</label>
+                        <select id="editPaymentMethod">
+                            <option value="신용카드">신용카드</option>
+                            <option value="계좌이체">계좌이체</option>
+                            <option value="가상계좌">가상계좌</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+                <div class="faq-form-actions">
+                    <button type="button" id="editCancelBtn" class="back-btn">취소</button>
+                    <button type="submit" class="submit-btn submit-btn--sm" id="editSaveBtn">저장 (완료 처리)</button>
+                </div>
+                <p class="submit-status" id="editFormStatus" role="alert"></p>
+            </form>
+        </div>
+    </div>
 
     <!-- Supabase 연결 시 아래 주석을 해제하세요 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
