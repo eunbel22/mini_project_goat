@@ -268,6 +268,15 @@ def answer(question: str) -> dict:
     index = get_index()
     hits = index.search(question)
 
+    # ---- 임시 진단 정보 (문제 해결되면 지울 것) ----
+    debug = {
+        "detected_cert": detect_cert(question),
+        "total_faq_loaded": len(index.faqs),
+        "common_items_in_index": sum(1 for f in index.faqs if "공통" in f.get("keywords", [])),
+        "index_age_seconds": round(time.time() - _cache["built_at"], 1),
+        "hit_titles": [faq["title"] for _, faq in hits],
+    }
+
     if not hits:
         return {
             "answer": (
@@ -277,6 +286,7 @@ def answer(question: str) -> dict:
             ),
             "source": None,
             "mode": "규칙",
+            "_debug": debug,
         }
 
     faq_text = "\n".join(f"- {faq['title']}: {faq['text']}" for _, faq in hits)
@@ -291,12 +301,12 @@ def answer(question: str) -> dict:
     if GEMINI_API_KEY:
         try:
             text = ask_gemini(question, faq_text)
-            return {"answer": text, "source": source, "mode": "Gemini"}
+            return {"answer": text, "source": source, "mode": "Gemini", "_debug": debug}
         except Exception as e:
             print(f"[Gemini 오류] {e}")
 
     top_faq = hits[0][1]
-    return {"answer": top_faq["text"], "source": top_faq["title"], "mode": "규칙"}
+    return {"answer": top_faq["text"], "source": top_faq["title"], "mode": "규칙", "_debug": debug}
 
 
 class handler(BaseHTTPRequestHandler):
