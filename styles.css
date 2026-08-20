@@ -202,6 +202,24 @@ a.font-toggle {
   flex-shrink: 0;
 }
 
+/* ---------- 비활성 카드 (접수 준비중) ---------- */
+
+.cert-card--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.cert-card--disabled:hover {
+  border-color: var(--color-border);
+  transform: none;
+}
+
+.cert-card__tag--disabled {
+  color: var(--color-muted);
+  background: #F2F0E9;
+}
+
 /* ---------- 뒤로가기 ---------- */
 
 .back-btn {

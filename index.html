@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
-    <title>두두자격지원센터 - 접수 신청</title>
+    <title>두두자격지원센터</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="home.css">
 </head>
 
 <body>
@@ -23,148 +24,69 @@
         </div>
     </header>
 
-    <main class="page">
+    <main class="home-page">
 
-        <!-- 1단계: 자격증 선택 -->
-        <section id="step-select" class="step">
-            <h1 class="page-title">어떤 자격증을 신청하시나요?</h1>
-            <p class="page-sub">아래에서 하나를 골라 눌러 주세요.</p>
-
-            <div class="cert-grid" id="certGrid">
-                <button type="button" class="cert-card" data-cert="한식조리기능사">
-                    <span class="cert-card__icon" aria-hidden="true">🍳</span>
-                    <span class="cert-card__name">한식조리기능사</span>
-                    <span class="cert-card__tag">상시 접수 · 14,500원</span>
-                </button>
-
-                <button type="button" class="cert-card" data-cert="요양보호사">
-                    <span class="cert-card__icon" aria-hidden="true">🤝</span>
-                    <span class="cert-card__name">요양보호사</span>
-                    <span class="cert-card__tag">상시 접수 · 32,000원</span>
-                </button>
-
-                <button type="button" class="cert-card" data-cert="공인중개사">
-                    <span class="cert-card__icon" aria-hidden="true">🏠</span>
-                    <span class="cert-card__name">공인중개사</span>
-                    <span class="cert-card__tag">연 1회 접수</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- 2단계: 신청서 입력 -->
-        <section id="step-form" class="step step--hidden">
-            <button type="button" id="backBtn" class="back-btn">
-                <span aria-hidden="true">←</span> 자격증 다시 고르기
-            </button>
-
-            <h1 class="page-title">신청서를 작성해 주세요</h1>
-            <p class="page-sub">
-                선택한 자격증: <strong id="selectedCertLabel"></strong>
+        <section class="home-hero">
+            <h1 class="home-hero__title">국가자격증 시험,<br>전화 대신 여기서 접수하세요</h1>
+            <p class="home-hero__desc">
+                큰 글씨, 간단한 화면으로 만들었어요.<br>
+                전화나 방문 없이도 몇 분이면 접수가 끝나요.
             </p>
-
-            <div id="certNotice" class="notice" role="status"></div>
-
-            <form id="applyForm" class="apply-form" novalidate>
-
-                <!-- 공통 필드 -->
-                <fieldset class="field-group">
-                    <legend class="field-group__title">신청자 정보</legend>
-
-                    <div class="field">
-                        <label for="name">이름 <span class="required">*</span></label>
-                        <input type="text" id="name" name="name" autocomplete="name" required placeholder="예) 김영자">
-                        <p class="field-error" id="nameError" role="alert"></p>
-                    </div>
-
-                    <div class="field">
-                        <label for="birthDate">생년월일 <span class="required">*</span></label>
-                        <input type="date" id="birthDate" name="birthDate" required>
-                        <p class="field-error" id="birthDateError" role="alert"></p>
-                    </div>
-
-                    <div class="field">
-                        <label>성별 <span class="required">*</span></label>
-                        <div class="radio-row">
-                            <label class="radio-pill">
-                                <input type="radio" name="gender" value="남" required> 남
-                            </label>
-                            <label class="radio-pill">
-                                <input type="radio" name="gender" value="여" required> 여
-                            </label>
-                        </div>
-                        <p class="field-error" id="genderError" role="alert"></p>
-                    </div>
-
-                    <div class="field">
-                        <label for="phone">연락처 <span class="required">*</span></label>
-                        <input type="tel" id="phone" name="phone" autocomplete="tel" required
-                            placeholder="010-1234-5678">
-                        <p class="field-hint">숫자만 이어서 입력하시면 자동으로 하이픈(-)이 붙어요.</p>
-                        <p class="field-error" id="phoneError" role="alert"></p>
-                    </div>
-                </fieldset>
-
-                <!-- 자격증별 동적 필드가 여기 채워집니다 -->
-                <fieldset class="field-group">
-                    <legend class="field-group__title">시험 정보</legend>
-                    <div id="certFields"></div>
-                </fieldset>
-
-                <!-- 결제 공통 필드 -->
-                <fieldset class="field-group">
-                    <legend class="field-group__title">결제 정보</legend>
-
-                    <div class="field">
-                        <label for="discountType">감면 대상이신가요?</label>
-                        <select id="discountType" name="discountType">
-                            <option value="없음">해당 없음</option>
-                            <option value="장애인">장애인 (50% 감면)</option>
-                            <option value="기초생활수급자">기초생활수급자 (50% 감면)</option>
-                            <option value="국가유공자">국가유공자 (50% 감면)</option>
-                            <option value="차상위계층">차상위계층 (50% 감면)</option>
-                        </select>
-                    </div>
-
-                    <div class="field">
-                        <label for="paymentMethod">결제 수단 <span class="required">*</span></label>
-                        <select id="paymentMethod" name="paymentMethod" required>
-                            <option value="신용카드">신용카드</option>
-                            <option value="계좌이체">계좌이체</option>
-                            <option value="가상계좌">가상계좌</option>
-                        </select>
-                    </div>
-
-                    <div class="fee-box">
-                        <span class="fee-box__label">예상 결제금액</span>
-                        <span class="fee-box__amount" id="feePreview">-</span>
-                    </div>
-                    <p class="field-hint">
-                        정확한 금액은 접수 시 저희 시스템이 다시 계산해 안내드립니다.
-                    </p>
-                </fieldset>
-
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    신청서 제출하기
-                </button>
-
-                <p class="submit-status" id="submitStatus" role="alert"></p>
-            </form>
+            <a href="apply.html" class="home-cta">접수 시작하기 →</a>
         </section>
 
-        <!-- 3단계: 완료 -->
-        <section id="step-done" class="step step--hidden">
-            <div class="done-box">
-                <span class="done-box__icon" aria-hidden="true">✅</span>
-                <h1 class="page-title">신청이 접수되었습니다</h1>
-                <p class="page-sub" id="doneSummary"></p>
-                <p class="done-box__note">
-                    접수 확인은 저희 센터에서 전화로 다시 안내드립니다.<br>
-                    궁금하신 점은 <a href="chatbot.html">문의 챗봇</a>에서도 물어보실 수 있어요.
-                </p>
-                <button type="button" id="restartBtn" class="submit-btn">
-                    다른 신청서 작성하기
-                </button>
+        <section class="home-certs">
+            <h2 class="home-section-title">취급하는 자격증 8종</h2>
+            <div class="home-cert-grid">
+                <div class="home-cert-item">
+                    <span class="home-cert-item__icon" aria-hidden="true">🍳</span>
+                    <span class="home-cert-item__name">한식조리기능사</span>
+                </div>
+                <div class="home-cert-item">
+                    <span class="home-cert-item__icon" aria-hidden="true">🤝</span>
+                    <span class="home-cert-item__name">요양보호사</span>
+                </div>
+                <div class="home-cert-item">
+                    <span class="home-cert-item__icon" aria-hidden="true">🏠</span>
+                    <span class="home-cert-item__name">공인중개사</span>
+                </div>
+                <div class="home-cert-item">
+                    <span class="home-cert-item__icon" aria-hidden="true">🚜</span>
+                    <span class="home-cert-item__name">지게차운전기능사</span>
+                </div>
+                <div class="home-cert-item">
+                    <span class="home-cert-item__icon" aria-hidden="true">🏗️</span>
+                    <span class="home-cert-item__name">굴착기운전기능사</span>
+                </div>
+                <div class="home-cert-item">
+                    <span class="home-cert-item__icon" aria-hidden="true">🌾</span>
+                    <span class="home-cert-item__name">손해평가사</span>
+                </div>
+                <div class="home-cert-item home-cert-item--soon">
+                    <span class="home-cert-item__icon" aria-hidden="true">⚡</span>
+                    <span class="home-cert-item__name">전기기능사</span>
+                    <span class="home-cert-item__badge">접수 준비중</span>
+                </div>
+                <div class="home-cert-item home-cert-item--soon">
+                    <span class="home-cert-item__icon" aria-hidden="true">🧪</span>
+                    <span class="home-cert-item__name">위생사</span>
+                    <span class="home-cert-item__badge">접수 준비중</span>
+                </div>
             </div>
+        </section>
+
+        <section class="home-how">
+            <h2 class="home-section-title">이렇게 진행돼요</h2>
+            <ol class="home-steps">
+                <li><strong>① 자격증 선택</strong> — 원하시는 자격증 카드를 눌러주세요</li>
+                <li><strong>② 신청서 작성</strong> — 이름, 연락처 등 간단한 정보만 입력해요</li>
+                <li><strong>③ 접수 완료</strong> — 저희가 확인 후 전화로 다시 안내드려요</li>
+            </ol>
+        </section>
+
+        <section class="home-help">
+            <p>궁금한 점이 있으시면 <a href="chatbot.html">문의 챗봇</a>에 편하게 물어보세요.</p>
+            <a href="apply.html" class="home-cta home-cta--secondary">접수 시작하기 →</a>
         </section>
 
     </main>
@@ -175,10 +97,7 @@
         <a href="admin.html" class="footer-staff-link">직원이신가요? 어드민 로그인</a>
     </footer>
 
-    <!-- Supabase 연결 시 아래 주석을 해제하세요 -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="common.js"></script>
-    <script src="script.js"></script>
+    <script src="home.js"></script>
 </body>
 
 </html>

@@ -107,6 +107,9 @@ function renderStats(rows) {
         { label: "한식조리기능사", value: countBy("한식조리기능사") },
         { label: "공인중개사", value: countBy("공인중개사") },
         { label: "요양보호사", value: countBy("요양보호사") },
+        { label: "지게차운전기능사", value: countBy("지게차운전기능사") },
+        { label: "굴착기운전기능사", value: countBy("굴착기운전기능사") },
+        { label: "손해평가사", value: countBy("손해평가사") },
     ];
 
     document.getElementById("statRow").innerHTML = stats.map(s => `

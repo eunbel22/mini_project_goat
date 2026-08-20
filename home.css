@@ -1,0 +1,155 @@
+/* ============================================
+   두두자격지원센터 - 메인 화면 스타일
+   ============================================ */
+
+.home-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.home-hero {
+  text-align: center;
+  padding: 40px 12px 32px;
+}
+
+.home-hero__title {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.4;
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+}
+
+.home-hero__desc {
+  font-size: var(--fs-lg);
+  color: var(--color-muted);
+  line-height: 1.7;
+  margin: 0 0 28px;
+}
+
+.home-cta {
+  display: inline-block;
+  background: var(--color-accent);
+  color: #fff;
+  text-decoration: none;
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  padding: 20px 40px;
+  border-radius: 999px;
+  min-height: var(--touch-min);
+  line-height: calc(var(--touch-min) - 40px);
+}
+
+.home-cta:hover { background: var(--color-accent-dark); }
+
+.home-cta--secondary {
+  margin-top: 8px;
+}
+
+.home-section-title {
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  color: var(--color-primary);
+  text-align: center;
+  margin: 0 0 24px;
+}
+
+/* ---------- 취급 자격증 목록 ---------- */
+
+.home-certs {
+  padding: 32px 0;
+  border-top: 2px solid var(--color-border);
+}
+
+.home-cert-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.home-cert-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-card-bg);
+  border: 3px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  text-align: center;
+}
+
+.home-cert-item__icon {
+  font-size: 32px;
+}
+
+.home-cert-item__name {
+  font-size: var(--fs-tag);
+  font-weight: 700;
+}
+
+.home-cert-item--soon {
+  opacity: 0.65;
+  border-style: dashed;
+}
+
+.home-cert-item__badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-muted);
+  background: #F2F0E9;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+/* ---------- 진행 순서 ---------- */
+
+.home-how {
+  padding: 32px 0;
+  border-top: 2px solid var(--color-border);
+}
+
+.home-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home-steps li {
+  background: var(--color-card-bg);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-size: var(--fs-tag);
+  line-height: 1.6;
+}
+
+.home-steps strong {
+  display: block;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+
+/* ---------- 하단 도움말 ---------- */
+
+.home-help {
+  text-align: center;
+  padding: 32px 0 8px;
+  border-top: 2px solid var(--color-border);
+}
+
+.home-help p {
+  font-size: var(--fs-tag);
+  color: var(--color-muted);
+  margin: 0 0 20px;
+}
+
+.home-help a:not(.home-cta) {
+  color: var(--color-primary);
+  font-weight: 700;
+}

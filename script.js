@@ -29,13 +29,22 @@ const GONGIN_SUBJECTS = {
     "2차": ["공인중개사법령 및 중개실무(필수)", "부동산공법(필수)", "부동산공시법 및 부동산세법(선택)"],
 };
 
+const SONHAE_SUBJECTS = {
+    "1차": ["상법 보험편", "농어업재해보험법령"],
+    "2차": ["농작물재해보험 및 가축재해보험의 이론과 실무", "농작물재해보험 및 가축재해보험 손해평가의 이론과 실무"],
+};
+
 // 수수료 - 클라이언트는 미리보기용으로만 계산한다.
 // 실제 최종금액은 schema.sql의 트리거가 서버에서 다시 계산한다(클라이언트 값 불신).
 const FEE_TABLE = {
     "한식조리기능사": 14500,
+    "지게차운전기능사": 14500,
+    "굴착기운전기능사": 14500,
     "공인중개사_1차": 13400,
     "공인중개사_2차": 15200,
     "요양보호사": 32000,
+    "손해평가사_1차": 30000,
+    "손해평가사_2차": 30000,
 };
 
 const DISCOUNT_RATE = {
@@ -47,6 +56,9 @@ const CERT_NOTICES = {
     "한식조리기능사": "상시 접수 종목입니다. 필기 응시료는 14,500원이며, 자리가 있으면 바로 접수됩니다.",
     "요양보호사": "상시 접수 종목입니다. 시험일 7일 전까지 접수하시면 됩니다.",
     "공인중개사": "2026년 1차 접수 기간(8/3~8/7)은 이미 종료됐습니다. 신청서를 접수해 두시면 다음 접수 시기를 저희가 확인 후 연락드립니다.",
+    "지게차운전기능사": "상시 접수 종목입니다. 필기 응시료는 14,500원이며, 자리가 있으면 바로 접수됩니다.",
+    "굴착기운전기능사": "상시 접수 종목입니다. 필기 응시료는 14,500원이며, 자리가 있으면 바로 접수됩니다.",
+    "손해평가사": "2026년 1차 시험(5/9)은 이미 지났고, 2차 일정은 저희가 확인하지 못했습니다. 신청서를 접수해 두시면 다음 일정을 확인 후 연락드립니다.",
 };
 
 // ---- 자격증별 동적 필드 설정 ----
@@ -57,7 +69,9 @@ function buildCertFields(cert) {
     const container = document.getElementById("certFields");
     container.innerHTML = "";
 
-    if (cert === "한식조리기능사") {
+    // 상시CBT형 3종은 필드 구조가 완전히 동일하다 (시험지역/시간대/희망시험일).
+    const CBT_CERTS = ["한식조리기능사", "지게차운전기능사", "굴착기운전기능사"];
+    if (CBT_CERTS.includes(cert)) {
         container.appendChild(makeSelectField("examRegion", "시험지역", REGIONS_17, true));
         container.appendChild(makeSelectField("examSession", "희망 시간대", NATIONAL_SESSIONS, true));
         container.appendChild(makeDateField("examDate", "희망 시험일", true, todayIso, examDateMaxIso));
@@ -107,6 +121,38 @@ function buildCertFields(cert) {
         // 초기 표시
         subjectNote.textContent = "시험과목: " + GONGIN_SUBJECTS["1차"].join(" / ");
         examDateNote.textContent = `시험일: ${GONGIN_EXAM_DATE["1차"]} (연 1회 고정일 · 자동 반영)`;
+    }
+
+    if (cert === "손해평가사") {
+        const stageField = makeSelectField("examStage", "응시 차수", ["1차", "2차"], true);
+        container.appendChild(stageField);
+
+        const examDateNote = document.createElement("p");
+        examDateNote.id = "sonhaeExamDateNote";
+        examDateNote.className = "field-hint field-hint--block";
+        container.appendChild(examDateNote);
+
+        container.appendChild(makeSelectField("examRegion", "시험지역", REGIONS_17, true));
+        container.appendChild(makeTextField("examCenter", "희망 시험장", "예) OO고등학교, 미정이면 지역명만 입력", true));
+
+        const subjectNote = document.createElement("p");
+        subjectNote.id = "subjectNote";
+        subjectNote.className = "notice notice--show";
+        container.appendChild(subjectNote);
+
+        // 2026년 1차 시험(5/9)은 이미 끝났고, 2차 일정은 확인된 자료가 없다.
+        // 지어내지 않고 미확정으로 안내한다.
+        const SONHAE_EXAM_DATE = { "1차": null, "2차": null };
+
+        const stageSelect = stageField.querySelector("select");
+        stageSelect.addEventListener("change", () => {
+            const stage = stageSelect.value;
+            subjectNote.textContent = "시험과목: " + SONHAE_SUBJECTS[stage].join(" / ");
+            examDateNote.textContent = "시험일: 2026년 일정은 이미 지났거나 아직 확정되지 않았습니다. 확정되는 대로 저희가 별도 안내드립니다.";
+            updateFeePreview();
+        });
+        subjectNote.textContent = "시험과목: " + SONHAE_SUBJECTS["1차"].join(" / ");
+        examDateNote.textContent = "시험일: 2026년 일정은 이미 지났거나 아직 확정되지 않았습니다. 확정되는 대로 저희가 별도 안내드립니다.";
     }
 
     updateFeePreview();
@@ -170,13 +216,16 @@ function updateFeePreview() {
     const discountType = document.getElementById("discountType")?.value || "없음";
     let baseFee = null;
 
-    if (selectedCert === "한식조리기능사") {
-        baseFee = FEE_TABLE["한식조리기능사"];
+    if (["한식조리기능사", "지게차운전기능사", "굴착기운전기능사"].includes(selectedCert)) {
+        baseFee = FEE_TABLE[selectedCert];
     } else if (selectedCert === "요양보호사") {
         baseFee = FEE_TABLE["요양보호사"];
     } else if (selectedCert === "공인중개사") {
         const stage = document.getElementById("examStage")?.value;
         if (stage) baseFee = FEE_TABLE["공인중개사_" + stage];
+    } else if (selectedCert === "손해평가사") {
+        const stage = document.getElementById("examStage")?.value;
+        if (stage) baseFee = FEE_TABLE["손해평가사_" + stage];
     }
 
     if (baseFee == null) {
@@ -335,7 +384,7 @@ function validateForm() {
     setError("phoneError", phonePattern.test(phoneDigits) ? "" : "올바른 휴대전화 번호를 입력해 주세요. (예: 01012345678)");
 
     // 자격증별 필수 필드 검증
-    if (selectedCert === "한식조리기능사") {
+    if (["한식조리기능사", "지게차운전기능사", "굴착기운전기능사"].includes(selectedCert)) {
         if (!val("examRegion")) valid = false;
         if (!val("examSession")) valid = false;
         if (!val("examDate")) valid = false;
@@ -348,7 +397,7 @@ function validateForm() {
         if (!val("testTimeSlot")) valid = false;
         if (!val("examDate")) valid = false;
     }
-    if (selectedCert === "공인중개사") {
+    if (selectedCert === "공인중개사" || selectedCert === "손해평가사") {
         if (!val("examStage")) valid = false;
         if (!val("examRegion")) valid = false;
         if (!val("examCenter")) valid = false;
