@@ -60,20 +60,20 @@ function buildCertFields(cert) {
     if (cert === "한식조리기능사") {
         container.appendChild(makeSelectField("examRegion", "시험지역", REGIONS_17, true));
         container.appendChild(makeSelectField("examSession", "희망 시간대", NATIONAL_SESSIONS, true));
-        container.appendChild(makeDateField("examDate", "희망 시험일", true));
+        container.appendChild(makeDateField("examDate", "희망 시험일", true, todayIso, examDateMaxIso));
         container.appendChild(makeReadonlyNote("등급: 기능사 · 시험구분: 필기 · 시험유형: 상시CBT · 응시자격: 제한없음"));
     }
 
     if (cert === "요양보호사") {
         container.appendChild(makeTextField("trainingInstitution", "교육기관명", "예) 서울시립요양보호사교육원", true));
         container.appendChild(makeTextField("trainingCertNumber", "교육수료번호", "예) TR20261234", true));
-        container.appendChild(makeDateField("trainingCompletionDate", "교육수료일", true));
+        container.appendChild(makeDateField("trainingCompletionDate", "교육수료일", true, "1900-01-01", todayIso));
         container.appendChild(makeReadonlyNote("교육이수시간: 240시간 (고정)"));
         container.appendChild(makeSelectField("testCenterCode", "시험센터",
             HEALTH_CENTERS.map(c => c.name), true, HEALTH_CENTERS.map(c => c.code)));
         container.appendChild(makeSelectField("testTimeSlot", "시간대", ["AM", "PM"], true,
             null, { AM: "오전 (09:00)", PM: "오후 (14:00)" }));
-        container.appendChild(makeDateField("examDate", "희망 시험일", true));
+        container.appendChild(makeDateField("examDate", "희망 시험일", true, todayIso, examDateMaxIso));
     }
 
     if (cert === "공인중개사") {
@@ -124,12 +124,13 @@ function makeTextField(id, label, placeholder, required) {
     return div;
 }
 
-function makeDateField(id, label, required) {
+function makeDateField(id, label, required, min, max) {
     const div = document.createElement("div");
     div.className = "field";
     div.innerHTML = `
     <label for="${id}">${label} ${required ? '<span class="required">*</span>' : ""}</label>
-    <input type="date" id="${id}" ${required ? "required" : ""}>
+    <input type="date" id="${id}" ${required ? "required" : ""}
+           ${min ? `min="${min}"` : ""} ${max ? `max="${max}"` : ""}>
   `;
     return div;
 }
@@ -206,40 +207,15 @@ const fontToggle = document.getElementById("fontToggle");
 
 document.getElementById("discountType").addEventListener("change", updateFeePreview);
 
-// ---- 생년월일: 연(직접입력 4자리) / 월 / 일 (셀렉트) ----
+// ---- 생년월일: 네이티브 달력 입력 유지, 대신 연도 범위를 min/max로 제한 ----
+// (브라우저 자체 버그로 연도 칸에 4자리 넘게 입력되는 경우가 있어, HTML의
+// min/max 속성으로 값 범위를 강제한다. 그래도 뚫리는 값은 제출 시 재검증한다.)
 
-const birthYearInput = document.getElementById("birthYear");
-const birthMonthSelect = document.getElementById("birthMonth");
-const birthDaySelect = document.getElementById("birthDay");
-
-for (let m = 1; m <= 12; m++) {
-    const opt = document.createElement("option");
-    opt.value = String(m).padStart(2, "0");
-    opt.textContent = `${m}월`;
-    birthMonthSelect.appendChild(opt);
-}
-for (let d = 1; d <= 31; d++) {
-    const opt = document.createElement("option");
-    opt.value = String(d).padStart(2, "0");
-    opt.textContent = `${d}일`;
-    birthDaySelect.appendChild(opt);
-}
-
-// 연도 4자리 숫자만 입력받고, 4자리를 다 채우면 자동으로 월 선택으로 넘어간다.
-birthYearInput.addEventListener("input", () => {
-    birthYearInput.value = birthYearInput.value.replace(/\D/g, "").slice(0, 4);
-    if (birthYearInput.value.length === 4) {
-        birthMonthSelect.focus();
-    }
-});
-
-function getBirthDateValue() {
-    const y = birthYearInput.value;
-    const m = birthMonthSelect.value;
-    const d = birthDaySelect.value;
-    if (y.length !== 4 || !m || !d) return null;
-    return `${y}-${m}-${d}`;
-}
+const todayIso = new Date().toISOString().slice(0, 10);
+const examDateMaxIso = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+const birthDateInput = document.getElementById("birthDate");
+birthDateInput.min = "1900-01-01";
+birthDateInput.max = todayIso;
 
 // ---- 연락처: 010 프리필 + 입력할 때마다 자동 하이픈 ----
 
@@ -256,6 +232,17 @@ phoneInput.addEventListener("input", () => {
     }
     phoneInput.value = formatted;
 });
+
+// 연도 범위를 벗어난 날짜(예: 200000-01-01)가 브라우저 입력 버그로 들어오면
+// 잘라내서 되돌린다. 자격증별 희망 시험일(examDate)에도 같은 처리를 한다.
+function clampDateInputYear(input, minIso, maxIso) {
+    input.addEventListener("change", () => {
+        if (input.value && (input.value < minIso || input.value > maxIso)) {
+            input.value = "";
+        }
+    });
+}
+clampDateInputYear(birthDateInput, "1900-01-01", todayIso);
 
 // ---- 글자 크게 보기 ----
 fontToggle.addEventListener("click", () => {
@@ -284,9 +271,6 @@ document.getElementById("backBtn").addEventListener("click", () => goToStep("sel
 document.getElementById("restartBtn").addEventListener("click", () => {
     applyForm.reset();
     phoneInput.value = "010-";
-    birthYearInput.value = "";
-    birthMonthSelect.value = "";
-    birthDaySelect.value = "";
     selectedCert = null;
     goToStep("select");
 });
@@ -333,10 +317,14 @@ function validateForm() {
                 : ""
     );
 
-    const birthDateVal = getBirthDateValue();
+    const birthDateVal = val("birthDate");
+    const yearOk = birthDateVal && /^\d{4}-\d{2}-\d{2}$/.test(birthDateVal)
+        && birthDateVal >= "1900-01-01" && birthDateVal <= todayIso;
     setError(
         "birthDateError",
-        birthDateVal ? "" : "생년월일을 연/월/일 모두 입력해 주세요."
+        !birthDateVal ? "생년월일을 선택해 주세요."
+            : !yearOk ? "생년월일 연도를 다시 확인해 주세요. (1900~오늘 사이)"
+                : ""
     );
     setError("genderError", document.querySelector('input[name="gender"]:checked') ? "" : "성별을 선택해 주세요.");
 
@@ -386,7 +374,7 @@ applyForm.addEventListener("submit", async (e) => {
     const payload = {
         qualification: selectedCert,
         name: val("name"),
-        birth_date: getBirthDateValue(),
+        birth_date: val("birthDate"),
         gender,
         phone,
         discount_type: val("discountType"),

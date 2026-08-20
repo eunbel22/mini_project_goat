@@ -77,20 +77,8 @@
                     </div>
 
                     <div class="field">
-                        <label for="birthYear">생년월일 <span class="required">*</span></label>
-                        <div class="birth-date-row">
-                            <input type="text" id="birthYear" inputmode="numeric" maxlength="4" placeholder="YYYY"
-                                class="birth-year-input" autocomplete="bday-year">
-                            <span class="birth-date-unit">년</span>
-                            <select id="birthMonth" class="birth-select" autocomplete="bday-month">
-                                <option value="">월</option>
-                            </select>
-                            <span class="birth-date-unit">월</span>
-                            <select id="birthDay" class="birth-select" autocomplete="bday-day">
-                                <option value="">일</option>
-                            </select>
-                            <span class="birth-date-unit">일</span>
-                        </div>
+                        <label for="birthDate">생년월일 <span class="required">*</span></label>
+                        <input type="date" id="birthDate" name="birthDate" required>
                         <p class="field-error" id="birthDateError" role="alert"></p>
                     </div>
 

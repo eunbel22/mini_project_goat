@@ -286,58 +286,6 @@ a.font-toggle {
   min-height: 20px;
 }
 
-/* ---------- 생년월일 (연/월/일 분리 입력) ---------- */
-
-.birth-date-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: nowrap;
-}
-
-.field .birth-date-row .birth-year-input {
-  width: 92px;
-  flex: none;
-  min-height: var(--touch-min);
-  border: 3px solid var(--color-border);
-  border-radius: 12px;
-  padding: 0 10px;
-  background: #fff;
-  color: var(--color-ink);
-  text-align: center;
-}
-
-.field .birth-date-row .birth-select {
-  width: auto;
-  flex: 1;
-  min-width: 72px;
-  min-height: var(--touch-min);
-  border: 3px solid var(--color-border);
-  border-radius: 12px;
-  padding: 0 8px;
-  background: #fff;
-  color: var(--color-ink);
-}
-
-.birth-year-input:focus,
-.birth-select:focus {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 1px;
-  border-color: var(--color-primary);
-}
-
-.birth-date-unit {
-  font-weight: 700;
-  color: var(--color-muted);
-  flex: none;
-}
-
-@media (max-width: 380px) {
-  .birth-date-row {
-    flex-wrap: wrap;
-  }
-}
-
 /* ---------- 필드 그룹 ---------- */
 
 .field-group {
