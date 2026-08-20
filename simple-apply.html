@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+    <title>두두자격지원센터 - 간편신청</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="simple-apply.css">
+</head>
+
+<body>
+
+    <header class="top-bar">
+        <div class="top-bar__inner">
+            <span class="top-bar__logo">두두자격지원센터 · 간편신청</span>
+            <nav class="top-bar__nav">
+                <a href="index.html" class="font-toggle">메인으로</a>
+                <button type="button" id="fontToggle" class="font-toggle" aria-pressed="false">
+                    <span class="font-toggle__label">글자 크게</span>
+                    <span class="font-toggle__icon">가+</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="simple-page">
+
+        <!-- 1단계: 자격증 선택 -->
+        <section id="step-select" class="step">
+            <h1 class="page-title">어떤 자격증을 접수하시나요?</h1>
+            <p class="simple-page__notice">
+                📞 이름과 전화번호만 남기시면, 저희가 전화드려서 나머지를 도와드려요.<br>
+                <strong>전화를 받지 않으시면 신청이 무효 처리돼요.</strong> 연락 가능한 번호를 준비해 주세요.
+            </p>
+
+            <div class="cert-grid" id="certGrid">
+                <button type="button" class="cert-card" data-cert="한식조리기능사">
+                    <span class="cert-card__icon" aria-hidden="true">🍳</span>
+                    <span class="cert-card__name">한식조리기능사</span>
+                </button>
+                <button type="button" class="cert-card" data-cert="요양보호사">
+                    <span class="cert-card__icon" aria-hidden="true">🤝</span>
+                    <span class="cert-card__name">요양보호사</span>
+                </button>
+                <button type="button" class="cert-card" data-cert="공인중개사">
+                    <span class="cert-card__icon" aria-hidden="true">🏠</span>
+                    <span class="cert-card__name">공인중개사</span>
+                </button>
+                <button type="button" class="cert-card" data-cert="지게차운전기능사">
+                    <span class="cert-card__icon" aria-hidden="true">🚜</span>
+                    <span class="cert-card__name">지게차운전기능사</span>
+                </button>
+                <button type="button" class="cert-card" data-cert="굴착기운전기능사">
+                    <span class="cert-card__icon" aria-hidden="true">🏗️</span>
+                    <span class="cert-card__name">굴착기운전기능사</span>
+                </button>
+                <button type="button" class="cert-card" data-cert="손해평가사">
+                    <span class="cert-card__icon" aria-hidden="true">🌾</span>
+                    <span class="cert-card__name">손해평가사</span>
+                </button>
+                <button type="button" class="cert-card cert-card--disabled" data-cert="전기기능사" disabled>
+                    <span class="cert-card__icon" aria-hidden="true">⚡</span>
+                    <span class="cert-card__name">전기기능사</span>
+                    <span class="cert-card__tag cert-card__tag--disabled">현재 접수기간이 아닙니다</span>
+                </button>
+                <button type="button" class="cert-card cert-card--disabled" data-cert="위생사" disabled>
+                    <span class="cert-card__icon" aria-hidden="true">🧪</span>
+                    <span class="cert-card__name">위생사</span>
+                    <span class="cert-card__tag cert-card__tag--disabled">현재 접수기간이 아닙니다</span>
+                </button>
+            </div>
+
+            <a href="apply.html" class="simple-page__fulllink">자세히 직접 작성할게요 →</a>
+        </section>
+
+        <!-- 2단계: 이름/전화번호만 입력 -->
+        <section id="step-form" class="step step--hidden">
+            <button type="button" id="backBtn" class="back-btn">
+                <span aria-hidden="true">←</span> 자격증 다시 고르기
+            </button>
+
+            <h1 class="page-title">이름과 전화번호만 알려주세요</h1>
+            <p class="page-sub">
+                선택한 자격증: <strong id="selectedCertLabel"></strong>
+            </p>
+
+            <p class="simple-page__warning">
+                ⚠️ 전화를 받지 않으시면 신청이 무효 처리돼요. 연락 가능한 번호를 입력해 주세요.
+            </p>
+
+            <form id="simpleForm" class="apply-form" novalidate>
+                <div class="field">
+                    <label for="name">이름 <span class="required">*</span></label>
+                    <input type="text" id="name" name="name" autocomplete="name" required placeholder="예) 김영자">
+                    <p class="field-error" id="nameError" role="alert"></p>
+                </div>
+
+                <div class="field">
+                    <label for="phone">연락처 <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" autocomplete="tel" required placeholder="010-1234-5678">
+                    <p class="field-hint">숫자만 이어서 입력하시면 자동으로 하이픈(-)이 붙어요.</p>
+                    <p class="field-error" id="phoneError" role="alert"></p>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">간편 신청 제출하기</button>
+                <p class="submit-status" id="submitStatus" role="alert"></p>
+            </form>
+        </section>
+
+        <!-- 3단계: 완료 -->
+        <section id="step-done" class="step step--hidden">
+            <div class="done-box">
+                <span class="done-box__icon" aria-hidden="true">✅</span>
+                <h1 class="page-title">간편 신청이 접수됐어요</h1>
+                <p id="doneSummary" class="done-box__summary"></p>
+                <p class="done-box__notice">저희가 곧 전화드릴게요. 전화를 꼭 받아주세요!</p>
+                <button type="button" id="restartBtn" class="back-btn">다른 신청서 작성하기</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="page-footer">
+        두두자격지원센터 · 접수 문의는 챗봇 또는 센터로 연락 주세요
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="common.js"></script>
+    <script src="simple-apply.js"></script>
+</body>
+
+</html>
