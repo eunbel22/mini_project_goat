@@ -216,24 +216,44 @@ _cache = {"index": None, "built_at": 0}
 def load_faq_rows():
     if SUPABASE_URL and SUPABASE_ANON_KEY:
         try:
-            url = f"{SUPABASE_URL}/rest/v1/faq_items?select=title,text,keywords"
-            req = urllib.request.Request(
-                url,
-                headers={
-                    "apikey": SUPABASE_ANON_KEY,
-                    "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
-                    # Supabase REST(PostgREST)는 Range 헤더가 없으면 기본
-                    # 1,000행까지만 돌려준다. 넉넉하게 요청해서 전량을 받는다.
-                    "Range-Unit": "items",
-                    "Range": "0-19999",
-                },
-            )
-            resp = urllib.request.urlopen(req, timeout=8)
-            return json.loads(resp.read())
+            return _fetch_all_faq_rows()
         except Exception as e:
             print(f"[FAQ 조회 오류 - 로컬 백업으로 대체] {e}")
 
     return json.loads(FAQ_PATH.read_text(encoding="utf-8"))
+
+
+def _fetch_all_faq_rows():
+    """Supabase 프로젝트의 'Max Rows' 설정(기본 1,000)은 서버 쪽 강제
+    상한선이라 Range 헤더로 더 달라고 요청해도 그 이상은 안 준다.
+    그래서 1,000개씩 끊어서 여러 번 요청하고 다 합친다."""
+    PAGE_SIZE = 1000
+    all_rows = []
+    offset = 0
+
+    while True:
+        url = f"{SUPABASE_URL}/rest/v1/faq_items?select=title,text,keywords"
+        req = urllib.request.Request(
+            url,
+            headers={
+                "apikey": SUPABASE_ANON_KEY,
+                "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
+                "Range-Unit": "items",
+                "Range": f"{offset}-{offset + PAGE_SIZE - 1}",
+            },
+        )
+        resp = urllib.request.urlopen(req, timeout=8)
+        page = json.loads(resp.read())
+        all_rows.extend(page)
+
+        if len(page) < PAGE_SIZE:
+            break  # 마지막 페이지 (덜 채워진 페이지가 오면 끝)
+        offset += PAGE_SIZE
+
+        if offset > 20000:  # 안전장치: 무한루프 방지
+            break
+
+    return all_rows
 
 
 def get_index() -> TfidfIndex:
