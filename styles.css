@@ -292,25 +292,29 @@ a.font-toggle {
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
-.birth-year-input {
-  width: 90px;
+.field .birth-date-row .birth-year-input {
+  width: 92px;
+  flex: none;
   min-height: var(--touch-min);
   border: 3px solid var(--color-border);
   border-radius: 12px;
-  padding: 0 12px;
+  padding: 0 10px;
   background: #fff;
   color: var(--color-ink);
   text-align: center;
 }
 
-.birth-select {
+.field .birth-date-row .birth-select {
+  width: auto;
+  flex: 1;
+  min-width: 72px;
   min-height: var(--touch-min);
   border: 3px solid var(--color-border);
   border-radius: 12px;
-  padding: 0 10px;
+  padding: 0 8px;
   background: #fff;
   color: var(--color-ink);
 }
@@ -325,6 +329,13 @@ a.font-toggle {
 .birth-date-unit {
   font-weight: 700;
   color: var(--color-muted);
+  flex: none;
+}
+
+@media (max-width: 380px) {
+  .birth-date-row {
+    flex-wrap: wrap;
+  }
 }
 
 /* ---------- 필드 그룹 ---------- */
