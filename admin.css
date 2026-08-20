@@ -173,6 +173,19 @@
     border-bottom: none;
 }
 
+.name-cell {
+    max-width: 160px;
+}
+
+.name-cell__text {
+    display: inline-block;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
 .status-badge {
     display: inline-block;
     padding: 4px 12px;

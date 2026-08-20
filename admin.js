@@ -159,6 +159,10 @@ function applyFilters() {
 }
 
 // ---- 테이블 렌더링 ----
+function escapeAttr(str) {
+    return String(str ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
 function renderTable(rows) {
     const tbody = document.getElementById("appTableBody");
     document.getElementById("resultCount").textContent = `총 ${rows.length.toLocaleString("ko-KR")}건`;
@@ -172,7 +176,7 @@ function renderTable(rows) {
     <tr>
       <td>${r.receipt_number ?? "-"}</td>
       <td>${r.qualification}</td>
-      <td>${r.name}${r.application_mode === "simple" ? ' <span class="mode-badge">📞 전화확인필요</span>' : ""}</td>
+      <td class="name-cell" title="${escapeAttr(r.name)}"><span class="name-cell__text">${r.name}</span>${r.application_mode === "simple" ? ' <span class="mode-badge">📞 전화확인필요</span>' : ""}</td>
       <td>${r.phone}</td>
       <td>${r.exam_date ?? "-"}</td>
       <td>${examLocationLabel(r)}</td>
